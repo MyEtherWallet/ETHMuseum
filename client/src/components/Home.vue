@@ -1,16 +1,19 @@
 <template>
 <div class='home-container'>
-    <Nav />
+    <NavOne />
+    <NavTwo />
 </div>
 </template>
 
 <script>
-import Nav from '../components/Nav.vue';
+import NavOne from '../components/NavOne.vue';
+import NavTwo from '../components/NavTwo.vue';
 
 export default {
     name: 'Home',
     components: {
-        Nav
+        NavOne,
+        NavTwo
     }
 
 }
