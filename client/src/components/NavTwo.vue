@@ -19,17 +19,21 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+    html, body, #nav-container {
+        font-family: 'Roboto';
+    }
     #nav-container {
         width: 100%;
-        height: 50px;
+        height: 60px;
         border: none;
         box-shadow: 5px 5px 10px rgba(100, 100, 100, 0.062);
         background-color: #FFFFFF;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
-        padding: 10px;
     }
     .left-of-nav{
         width: 30%;
@@ -38,6 +42,7 @@ export default {
         flex-direction: row;
         justify-content: space-evenly;
         align-items: center;
+        padding: 9%;
     }
     .left-of-nav a {
         text-decoration: none;
@@ -50,14 +55,14 @@ export default {
         color: #4B83E8;
     }
     .right-of-nav{
-        width: 22%;
+        width: 30%;
         height: 100%;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
     }
     input {
-        width: 280px;
+        width: 480px;
         height: 31px;
         border-radius: 10px;
         border: 1px solid #D7DAE3;
@@ -74,7 +79,7 @@ export default {
         opacity: 0.7;
     }
     button {
-        width: 80px;
+        width: 100px;
         height: 35px;
         border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;

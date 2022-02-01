@@ -1,6 +1,7 @@
 <template>
 <div class='home-container'>
     <NavOne />
+    <MintBox />
     <NavTwo />
 </div>
 </template>
@@ -8,12 +9,15 @@
 <script>
 import NavOne from '../components/NavOne.vue';
 import NavTwo from '../components/NavTwo.vue';
+import MintBox from '../components/MintBox.vue';
 
 export default {
     name: 'Home',
     components: {
         NavOne,
-        NavTwo
+        NavTwo,
+        MintBox
+      
     }
 
 }

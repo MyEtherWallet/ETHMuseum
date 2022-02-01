@@ -2,8 +2,9 @@
     <div id='nav-container'>
         <div class='mid-of-nav'>
             <div class='logo-block'>
+                <img class='block-logo' src="../assets/images/icon-dapp-eth-blocks.svg" alt="">
                 <h1>ETH Museum</h1>
-                <p class='slogan'><em>Own a piece of Ethereum History</em></p>
+                <!-- <p class='slogan'><em>Own a piece of Ethereum History</em></p> -->
             </div>
         </div>
     </div>
@@ -24,15 +25,15 @@ export default {
         /* box-shadow: 5px 5px 10px rgba(100, 100, 100, 0.062);; */
         display: flex;
         flex-direction: row;
-        justify-content:space-evenly;
+        justify-content: flex-start;
         align-items: center;
-        padding-bottom: 10px;
     }
     .logo-block {
-        width: 450px;
+        width: 400px;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: center;
         align-items: center;
+        padding-left: 12%;
     }
     .mid-of-nav h1{
         color: #05C0A5;
@@ -48,6 +49,10 @@ export default {
         justify-content: space-evenly;
         align-items: center;
         font-size: 15.7px;
+    }
+    img {
+        width: 30px;
+        height: 30px;
     }
     input {
         width: 280px;
