@@ -1,38 +1,50 @@
-
-import block from '../assets/block_1404_test.png'
 <template>
-  <div>
-    <h1>HELLO WORLD! <br><br>THIS IS THE VERY BEGINNING OF THE VERY FIRST ETH MUSEUM</h1>
-    <img src='../assets/block_1404_test.png' />
-
-
-
-  </div>
+<div class='home-container'>
+    <Nav />
+</div>
 </template>
 
 <script>
+import Nav from '../components/Nav.vue';
+
 export default {
-  name: 'Home',
+    name: 'Home',
+    components: {
+        Nav
+    }
 
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+.home-container{
+  width: 100%;
+  height: 100vh;
+}
+
 h1 {
-  margin: 40px 0 0;
-  font-size:  1.714rem;
-  font-weight: 400;
+    font-family: 'Roboto';
+    margin: 40px 0 0;
+    font-size: 2.571rem;
+    color: #05C0A5;
+
 }
+
 ul {
-  list-style-type: none;
-  padding: 0;
+    list-style-type: none;
+    padding: 0;
 }
+
 li {
-  display: inline-block;
-  margin: 0 10px;
+    display: inline-block;
+    margin: 0 10px;
 }
+
 a {
-  color: #42b983;
+    color: #42b983;
 }
 </style>
