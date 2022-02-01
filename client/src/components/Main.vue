@@ -218,7 +218,7 @@
         <div class='right-of-main-box'>
             <img class='mew-icon' src='../assets/images/icon-mew-wallet.f29574d3.png' />
             <img class='mint-blob-block' src="../assets/images/block_img.png" alt="">
-            <img class='mint-blob-block2' src="../assets/images/block_1404_test.png" alt="">
+            <img class='mint-blob-block2' src="../assets/images/block_img.png" alt="">
             <div class="mint-box">
                 <h3>How does it work?</h3>
                 <p>Notable Ethereum blocks are minted as NFTs by the community and displayed here. 
