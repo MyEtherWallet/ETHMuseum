@@ -4,10 +4,10 @@
             <a href="#">All minted blocks</a>
             <a href="#">Blocks with comments</a>
             <a href="#">Most liked</a>
+            <input type="text" placeholder="Block number, hash or comment.."/>
+            <button>Search Block</button>
         </div>
         <div class='right-of-nav'>
-            <input type="text" placeholder="Block number, hash or comment.."/>
-            <button>Search</button>
         </div>
     </div>
 </template>
@@ -36,7 +36,7 @@ export default {
         align-items: center;
     }
     .left-of-nav{
-        width: 30%;
+        width: 100%;
         height: 100%;
         display: flex;
         flex-direction: row;
@@ -62,7 +62,7 @@ export default {
         align-items: center;
     }
     input {
-        width: 480px;
+        width: 250px;
         height: 31px;
         border-radius: 10px;
         border: 1px solid #D7DAE3;
@@ -88,6 +88,8 @@ export default {
         border: none;
         background-color: #05c0a5;
         color: white;
+        font-size: 12px;
+        margin-left: -50px;
     }
     button:hover{
         transition: ease-in-out 200ms;
