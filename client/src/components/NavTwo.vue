@@ -4,7 +4,7 @@
             <a href="#">All minted blocks</a>
             <a href="#">Blocks with comments</a>
             <a href="#">Most liked</a>
-            <input type="text" placeholder="Block number, hash or comment.."/>
+            <input type="text" placeholder="Block # or hash.."/>
             <button>Search Block</button>
         </div>
         <div class='right-of-nav'>
@@ -28,7 +28,7 @@ export default {
         width: 100%;
         height: 60px;
         border: none;
-        box-shadow: 5px 5px 10px rgba(100, 100, 100, 0.062);
+        box-shadow: 5px 5px 10px rgba(100, 100, 100, 0.108);
         background-color: #FFFFFF;
         display: flex;
         flex-direction: row;
@@ -36,13 +36,13 @@ export default {
         align-items: center;
     }
     .left-of-nav{
-        width: 100%;
+        width: 50%;
         height: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
         align-items: center;
-        padding: 9%;
+        padding: 7.2%;
     }
     .left-of-nav a {
         text-decoration: none;
@@ -62,7 +62,7 @@ export default {
         align-items: center;
     }
     input {
-        width: 250px;
+        width: 190px;
         height: 31px;
         border-radius: 10px;
         border: 1px solid #D7DAE3;
@@ -77,6 +77,7 @@ export default {
     input::placeholder{
         color: #939FB9;
         opacity: 0.7;
+        font-size: 12px;
     }
     button {
         width: 100px;
@@ -89,7 +90,7 @@ export default {
         background-color: #05c0a5;
         color: white;
         font-size: 12px;
-        margin-left: -50px;
+        margin-left: -25px;
     }
     button:hover{
         transition: ease-in-out 200ms;

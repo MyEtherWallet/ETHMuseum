@@ -15,13 +15,13 @@ export default defineComponent({
 </script>
 
 <style>
+/* @import '@/assets/styles/GlobalStyles.scss'; */
 html, body, #app {
   width: 100%;
   height: 100vh;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -30,5 +30,7 @@ html, body, #app {
   text-align: center;
   color: #2c3e50;
   padding-top: 10px;
+  scroll-behavior: smooth;
+
 }
 </style>

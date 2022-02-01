@@ -1,12 +1,11 @@
 <template>
     <div id='nav-container'>
-        <div class='mid-of-nav'>
             <div class='logo-block'>
                 <img class='block-logo' src="../assets/images/icon-dapp-eth-blocks.svg" alt="">
                 <h1>ETH Museum</h1>
-                <!-- <p class='slogan'><em>Own a piece of Ethereum History</em></p> -->
+                <p class='slogan'>Own a piece of Ethereum History</p>
             </div>
-        </div>
+    
     </div>
 </template>
 
@@ -17,6 +16,11 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+    html, body, #nav-container {
+        font-family: 'Roboto';
+    }
     #nav-container {
         width: 100%;
         height: 60px;
@@ -29,26 +33,23 @@ export default {
         align-items: center;
     }
     .logo-block {
-        width: 400px;
+        width: 490px;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-left: 12%;
+        padding-left: 7.7%;
+        /* border: 1px solid black; */
     }
-    .mid-of-nav h1{
+    h1{
+        width: 210px;
         color: #05C0A5;
     }
-    .mid-of-nav p{
+    p{
+        width: 220px;
         color: #5A678A;
-        font-size: 14px;
-    }
-    .mid-of-nav{
-        width: 33%;
-        height: 100%;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        font-size: 15.7px;
+        font-size: 15px;
+        padding-top:10px;
     }
     img {
         width: 30px;
