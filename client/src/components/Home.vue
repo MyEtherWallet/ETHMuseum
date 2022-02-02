@@ -20,7 +20,6 @@ export default {
         NavTwo,
         Main,
         Footer
-      
     }
 
 }
@@ -31,10 +30,10 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
-.home-container{
-  width: 100%;
-  height: 100vh;
-}
+    .home-container{
+    width: 100%;
+    height: 100vh;
+    }
 
 h1 {
     font-family: 'Roboto';

@@ -13,9 +13,29 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     name: 'NavOne',
-}
+    data() {
+        return {
+            blockSearchInput: ''
+        }
+    },
+    mounted () {
+        axios
+        .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=2000')
+        .then(response => {
+            this.blockSearchInput = response.data.items;
+            console.log(this.blockSearchInput)
+        })
+        .catch(error => {
+            console.log(error)
+            this.errored = true
+        })
+        .finally(() => this.loading = false)
+        }
+};  
+
 </script>
 
 <style scoped>
