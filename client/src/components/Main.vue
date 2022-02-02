@@ -218,7 +218,7 @@
         <div class='right-of-main-box'>
             <img class='mew-icon' src='../assets/images/icon-mew-wallet.f29574d3.png' />
             <img class='mint-blob-block' src="../assets/images/block_img.png" alt="">
-            <img class='mint-blob-block2' src="../assets/images/block_img.png" alt="">
+            <div class='pulse'></div>
             <div class="mint-box">
                 <h3>How does it work?</h3>
                 <p>Notable Ethereum blocks are minted as NFTs by the community and displayed here. 
@@ -410,7 +410,7 @@ export default {
         width: 90px;
         height: 90px;
         position:absolute;
-        top: 33%;
+        top: 34%;
         z-index: 2;
         animation: minticonmove 2s linear infinite;
     }
@@ -442,22 +442,44 @@ export default {
     }
 }
     .mint-blob-block{
-        width: 300px;
-        height: 300px;
-        top: 30%;
+        width: 290px;
+        height: 350px;
+        top: 33%;
         border-radius: 50%;
-        opacity: 0.4;
+        opacity: 0.6;
         position: absolute;
-        box-shadow: 1px 1px 10px #05C0A5;
+        /* box-shadow: 1px 1px 10px #05c0a40a; */
+        z-index: 0;
     }
-    .mint-blob-block2{
-        width: 300px;
-        height: 300px;
-        top: 45%;
+    .pulse{
+        width: 90px;
+        height: 90px;
+        position:absolute;
+        top: 34%;
+        background:#05C0A5;
+        filter: blur(0.2rem);
+        margin: auto;
         border-radius: 50%;
-        opacity: 0.4;
+        opacity: 0.2;
+        z-index: -2;
+        animation: pulse 2.0s ease-out infinite;
+    }
+    .pulse:before,
+    .pulse:after{
+        content:'';
         position: absolute;
-        box-shadow: 1px 1px 10px #05C0A5;
+        height: 100%;
+        height: 100%;
+        background: #05C0A5; 
+        z-index: -2;
+        opacity: 0.1;
+    }
+
+    @keyframes pulse{
+        100%{
+            transform: scale(4);
+            opacity: 0;
+        }
     }
     .mint-box{
         width: 60%;
