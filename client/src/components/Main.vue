@@ -11,10 +11,10 @@
                 <div class='timeline-content'>
 
                     <section v-if="errored">
-                        <p class='noInfo'>We're sorry, we're unable to retrieve block information at the moment, please try again later</p>
+                        <p class='noDataMessage'>We're sorry, we're unable to retrieve block information at the moment, please try again later</p>
                     </section>
                     <section v-else>
-                        <div v-if="loading" class='loadError'>Loading ETH Blocks...</div>
+                        <div v-if="loading" class='loadMessage'>Loading ETH Blocks...</div>
 
                         <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="block in blockInfo" v-bind:key="block">
                             <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
@@ -210,6 +210,10 @@ h1,
     flex-direction: row;
     align-items: center;
     /* overflow: hidden; */
+}
+
+.loadMessage {
+    margin-top: 50%;
 }
 
 /*=========================  LEFT OF MAIN BOX  ===============================================*/
