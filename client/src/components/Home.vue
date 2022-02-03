@@ -1,23 +1,17 @@
 <template>
 <div class='home-container'>
-    <NavOne />
-    <NavTwo />
     <Main />
     <Footer />
 </div>
 </template>
 
 <script>
-import NavOne from '../components/NavOne.vue';
-import NavTwo from '../components/NavTwo.vue';
-import Main from '../components/Main.vue';
-import Footer from '../components/Footer.vue'
+import Main from '@/components/Main.vue';
+import Footer from '@/components/Footer.vue'
 
 export default {
     name: 'Home',
     components: {
-        NavOne,
-        NavTwo,
         Main,
         Footer
     }

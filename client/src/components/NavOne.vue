@@ -23,7 +23,7 @@ export default {
     }
     #nav-container {
         width: 100%;
-        height: 60px;
+        height: 50%;
         background-color: #FFFFFF;
         border-bottom: 1px solid #F8F9FB;
         /* box-shadow: 5px 5px 10px rgba(100, 100, 100, 0.062);; */

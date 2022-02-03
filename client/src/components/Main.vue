@@ -1,91 +1,170 @@
 <template>
-<div id='main-box-container'>
-    <div class='left-of-main-box'>
-        <div class="timeline-box">
-            <!-- <div class="timeline-box-title">
-                    <h1>View Our History</h1>
-                </div> -->
-            <div class='timeline-content'>
-                <!-- <span class='timeline-span'></span> -->
+<div id='main-container'>
+    <div id='nav-container-hugger'>
+        <navOneApp />
+        <navTwoApp @blockWasSearched="blockSearch = $event" />
+    </div>
 
-                <section v-if="errored">
-                    <p>We're sorry, we're unable to retrieve this information at the moment, please try again later</p>
-                </section>
-                <section v-else>
-                    <div v-if="loading">Loading ETH Blocks...</div>
+    <div id="main-content-container">
+        <div class='left-of-main-box'>
+            <div class="timeline-box">
+                <div class='timeline-content'>
 
-                    <div class='block-card' v-else v-for="block in blockInfo" v-bind:key="block">
-                        <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
-                        <div class='left-of-blockcard'>
-                            <div class='block-pic-hugger'>
-                                <img class='block-pic' :src="getImgUrl(block.meta.attributes[0].value)" v-bind:alt="pic" />
+                    <section v-if="errored">
+                        <p class='noInfo'>We're sorry, we're unable to retrieve block information at the moment, please try again later</p>
+                    </section>
+                    <section v-else>
+                        <div v-if="loading" class='loadError'>Loading ETH Blocks...</div>
+
+                        <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="block in blockInfo" v-bind:key="block">
+                            <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
+                            <div class='left-of-blockcard'>
+                                <div class='block-pic-hugger'>
+                                    <img class='block-pic' :src="getImgUrl(block.meta.attributes[0].value)" />
+                                </div>
+                                <div class='mint-date'>
+                                    <p>Minted: {{block.meta.attributes[2].value}}</p>
+                                </div>
                             </div>
-                            <div class='mint-date'>
-                                <p>Minted: {{block.meta.attributes[2].value}}</p>
+                            <div class='right-of-blockcard'>
+
+                                <div class='card-title'>
+                                    <h2>
+                                        {{block.meta.name}}
+                                    </h2>
+                                </div>
+                                <div class='card-owner-title'>
+                                    <p>
+                                        Owned by: {{block.owners[0]}}
+                                    </p>
+                                </div>
+                                <div class='comment-container'>
+                                    <p>
+                                        {{block.meta.description}}
+                                    </p>
+                                </div>
+                                <div class='details-container'>
+                                    <h1>
+                                        More info
+                                    </h1>
+                                </div>
                             </div>
                         </div>
-                        <div class='right-of-blockcard'>
 
-                            <div class='card-title'>
-                                <h2>
-                                    {{block.meta.name}}
-                                </h2>
+                        <div class='block-card' v-else-if="!loading && !searchedMultiple">
+                            <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
+                            <div class='left-of-blockcard'>
+                                <div class='block-pic-hugger'>
+                                    <img class='block-pic' :src="getImgUrl(this.blockInfo.meta.attributes[0].value)" />
+                                </div>
+                                <div class='mint-date'>
+                                    <p>Minted: {{this.blockInfo.meta.attributes[2].value}}</p>
+                                </div>
                             </div>
-                            <div class='card-owner-title'>
-                                <p>
-                                    Owned by: {{block.meta.attributes[3].value}}
-                                </p>
-                            </div>
-                            <div class='comment-container'>
-                                <p>
-                                    {{block.meta.description}}
-                                </p>
-                            </div>
-                            <div class='details-container'>
-                                <h1>
-                                    More info
-                                </h1>
+                            <div class='right-of-blockcard'>
+
+                                <div class='card-title'>
+                                    <h2>
+                                        {{this.blockInfo.meta.name}}
+                                    </h2>
+                                </div>
+                                <div class='card-owner-title'>
+                                    <p>
+                                        Owned by: {{block.owners[0]}}
+                                    </p>
+                                </div>
+                                <div class='comment-container'>
+                                    <p>
+                                        {{this.blockInfo.meta.description}}
+                                    </p>
+                                </div>
+                                <div class='details-container'>
+                                    <h1>
+                                        More info
+                                    </h1>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
+                </div>
             </div>
         </div>
-    </div>
-    <div class='right-of-main-box'>
-        <img class='mew-icon' src='../assets/images/icon-mew-wallet.f29574d3.png' />
-        <img class='mint-blob-block' src="../assets/images/block_img.png" alt="">
-        <div class='pulse'></div>
-        <div class="mint-box">
-            <h3>How does it work?</h3>
-            <p>Notable Ethereum blocks are minted as NFTs by the community and displayed here.
-                Comments are added by owners, and may or may not be accurate.</p>
-            <button>Mint Your ETH Block</button>
+        <div class='right-of-main-box'>
+            <img class='mew-icon' src='../assets/images/icon-mew-wallet.f29574d3.png' />
+            <img class='mint-blob-block' src="../assets/images/block_img.png" alt="">
+            <div class='pulse'></div>
+            <div class="mint-box">
+                <h3>How does it work?</h3>
+                <p>Notable Ethereum blocks are minted as NFTs by the community and displayed here.
+                    Comments are added by owners, and may or may not be accurate.</p>
+                <button>Mint Your ETH Block</button>
+            </div>
         </div>
     </div>
 </div>
 </template>
 
 <script>
+import NavOne from '@/components/NavOne.vue'
+import NavTwo from '@/components/NavTwo.vue'
 import axios from 'axios';
+
 export default {
     name: 'Main',
+    props: ['blockWasSearched'],
+    components: {
+        'navOneApp': NavOne,
+        'navTwoApp': NavTwo
+    },
     data() {
         return {
-            blockInfo: '',
-            blockImg: '',
-            blockInfoName: '',
+            blockSearch: '',
             errored: false,
-            loading: true
+            loading: true,
+            searchedMultiple: true
+        }
+    },
+    computed: {
+        blockSearchLink() {
+            const hash = /\b([0x]+[a-f0-9]{40})\b/;
+            if (this.blockSearch == '') {
+                return 'https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10';
+            } else if (hash.test(this.blockSearch)) {
+                return 'https://ethereum-api.rarible.org/v0.1/nft/items/byOwner?owner=' + this.blockSearch;
+            } else {
+                return 'https://ethereum-api.rarible.org/v0.1/nft/items/0x01234567bac6ff94d7e4f0ee23119cf848f93245:' + this.blockSearch;
+            }
+        }
+    },
+    watch: {
+        blockSearchLink(newVal) {
+            this.loading = true;
+            this.errored = false;
+            axios
+                .get(newVal)
+                .then(response => {
+                    if (response.data.items) {
+                        this.blockInfo = response.data.items;
+                        this.searchedMultiple = true;
+                    } else {
+                        this.blockInfo = response.data;
+                        this.searchedMultiple = false;
+                    }
+                    this.errored = false;
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errored = true
+                })
+                .finally(() => this.loading = false)
         }
     },
     mounted() {
         axios
-            .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=3')
+            .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10')
             .then(response => {
                 this.blockInfo = response.data.items;
-                // console.log(this.blockInfo.meta)
             })
             .catch(error => {
                 console.log(error)
@@ -95,7 +174,7 @@ export default {
     },
     methods: {
         getImgUrl(blockNumber) {
-            return ('https://ethblocksdata.mewapi.io/1/'+ blockNumber +'/image.png')
+            return ('https://ethblocksdata.mewapi.io/1/' + blockNumber + '/image.png')
         }
     },
 };
@@ -107,30 +186,43 @@ export default {
 html,
 body,
 h1,
-#nav-container {
+#main-box-container {
     font-family: 'Roboto';
 }
 
-#main-box-container {
+#nav-container-hugger {
     width: 100%;
-    height: 100vh;
+    height: 110px;
+}
+
+#main-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#main-content-container {
+    width: 100%;
+    height: 84.7%;
     display: flex;
     flex-direction: row;
     align-items: center;
+    /* overflow: hidden; */
 }
+
 /*=========================  LEFT OF MAIN BOX  ===============================================*/
 /*=========================  LEFT OF MAIN BOX  ===============================================*/
 .left-of-main-box {
     width: 57%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     background-color: #F8F9FB;
     overflow-y: scroll;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    z-index: 1;
-    position: relative;
 }
 
 .left-of-main-box::-webkit-scrollbar {
@@ -152,7 +244,7 @@ h1,
     justify-content: flex-start;
     align-items: center;
     position: relative;
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 .block-card {
@@ -235,7 +327,7 @@ h1,
 
 .comment-container {
     width: 100%;
-    height:fit-content;
+    height: fit-content;
     font-size: 12px;
     text-align: left;
     /* border: 1px solid black; */
@@ -251,7 +343,7 @@ h1,
 .details-container h1 {
     font-size: 12px;
     font-weight: 700;
-    margin:0;
+    margin: 0;
     cursor: pointer;
 }
 
@@ -289,7 +381,7 @@ h1,
 /*=========================  RIGHT OF MAIN BOX  ===============================================*/
 .right-of-main-box {
     width: 43%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
 }
@@ -298,7 +390,7 @@ h1,
     width: 90px;
     height: 90px;
     position: absolute;
-    top: 34%;
+    top: 32%;
     z-index: 2;
     animation: minticonmove 2s linear infinite;
 }
