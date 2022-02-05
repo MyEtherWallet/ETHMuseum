@@ -19,11 +19,11 @@ export default {
             if (entry && entry.isIntersecting) {
                 this.$emit("intersect");
                 console.log('Observer TRIGGERED!')
-                console.log(entry)
+                // console.log(entry)
             }
         }, options);
         this.observer.observe(this.$refs.trigger);
-                console.log(options)
+                // console.log(options)
         // console.log(this.observer)
         // console.log(this.options)
         // console.log(this.trigger)

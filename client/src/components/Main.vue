@@ -32,7 +32,7 @@
                         ====================================================================================================
                     -->
 
-            <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="block in blockInfo" v-bind:key="block">
+            <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="block in blockItems" v-bind:key="block">
                 <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
                 <div class='left-of-blockcard'>
                     <div class='block-pic-hugger'>
@@ -105,6 +105,11 @@
                     </div>
                 </div>
             </div>
+            <!--
+            ====================================================================================================
+                    THE AREA BELOW IS STRICTLY FOR THE INTERSECTION OBSERVER INCLUDING THE P TAGS
+            ====================================================================================================
+        -->
             <trigger-app @intersect="intersected" v-if="!loading && searchedMultiple" />
             <p></p>
         </div>
@@ -154,6 +159,7 @@ export default {
             blockSearch: '',
             blockInfo: [],
             blockList: [],
+            blockItems: [],
             observerTriggered: false,
             pageIncrement: 5,
             errored: false,
@@ -200,6 +206,7 @@ export default {
                     } else {
                         this.blockInfo = response.data;
                         this.searchedMultiple = false;
+                        // this.searchedHash = true
                     }
                     this.errored = false;
                 })
@@ -211,9 +218,10 @@ export default {
         }
     },
     mounted() {
+        this.loadInterval;
         /*
             ====================================================================================================
-            ON RENDER WE WANT TO RENDER "10" BLOCKS FOR NOW
+                                ON RENDER WE WANT TO RENDER "10" BLOCKS FOR NOW
             ====================================================================================================
          */
         axios
@@ -227,6 +235,9 @@ export default {
             })
             .finally(() => this.loading = false)
     },
+    unmounted () {
+        clearInterval( this.loadInterval )
+    },
     methods: {
         /*
             ====================================================================================================
@@ -237,35 +248,31 @@ export default {
             return ('https://ethblocksdata.mewapi.io/1/' + blockNumber + '/image.png')
         },
         intersected() {
-            const querySize = this.pageIncrement + this.blockInfo.length
-            const query = ('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=' + querySize)
-            console.log(query)
+            // const querySize = this.pageIncrement + this.blockInfo.length
             axios
-                .get(query)
+                .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=' + this.pageIncrement)
                 .then(response => {
-                    this.blockList = response.data.items
-                    this.blockInfo.concat(this.blockList.splice(this.blockInfo.length, this.blockInfo.length + this.pageIncrement + 1))
-                    // console.log('BLOCKINFO')
-                    // console.log(this.blockInfo);
-                    console.log('BLOCKLIST')
-                    console.log(this.blockList)
+                    this.pageIncrement += 5;
+                    this.blockList = response.data.items;
+                    this.blockItems = [...this.blockList, ...this.blockList]
+                    console.log(this.blockItems)
+                    // this.blockInfo.concat(this.blockList)
+                    // this.blockInfo = [...this.blockList, ...this.blockList]
+                    // this.blockInfo.concat(this.blockList.splice(this.blockInfo.length, this.blockInfo.length + pageIncrement - 1))
+                    // console.log(this.blockItems)
                 })
                 .catch(error => {
                     console.log(error)
                     this.errored = true
                 })
                 .finally(() => this.loading = false)
-        }
+        },
     },
+    loadInterval() {
+        setInterval(this.blockInfo, 10000)
+    }
 };
 </script>
-
-
-
-
-
-
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
