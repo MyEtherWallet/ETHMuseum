@@ -59,9 +59,10 @@
                         </p>
                     </div>
                     <div class='details-container'>
-                        <h1>
+                        <h1 @click="showMoreDetails">
                             More info
                         </h1>
+                        <detailModal-app ref='detailModal'/>
                     </div>
                 </div>
             </div>
@@ -99,10 +100,11 @@
                         </p>
                     </div>
                     <div class='details-container'>
-                        <h1>
+                        <h1 @click="showMoreDetails">
                             More info
                         </h1>
                     </div>
+                    <detailModal-app ref='detailModal' />
                 </div>
             </div>
             <!--
@@ -141,6 +143,7 @@ import NavOne from '@/components/NavOne.vue'
 import NavTwo from '@/components/NavTwo.vue'
 import Footer from '@/components/Footer.vue'
 import Trigger from '@/components/Trigger.vue'
+import DetailModal from '@/components/DetailModal.vue'
 import BlockCardSkeleton from '@/components/BlockCardSkeleton.vue'
 import axios from 'axios';
 
@@ -152,7 +155,8 @@ export default {
         'navTwoApp': NavTwo,
         'footer-app': Footer,
         'trigger-app': Trigger,
-        'blockCardSkeleton-app': BlockCardSkeleton
+        'blockCardSkeleton-app': BlockCardSkeleton,
+        'detailModal-app': DetailModal
     },
     data() {
         return {
@@ -160,7 +164,6 @@ export default {
             blockInfo: [],
             blockList: [],
             blockItems: [],
-            observerTriggered: false,
             pageIncrement: 5,
             errored: false,
             loading: true,
@@ -218,14 +221,13 @@ export default {
         }
     },
     mounted() {
-        this.loadInterval;
         /*
             ====================================================================================================
                                 ON RENDER WE WANT TO RENDER "10" BLOCKS FOR NOW
             ====================================================================================================
          */
         axios
-            .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10')
+            .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=100')
             .then(response => {
                 this.blockInfo = response.data.items;
             })
@@ -234,9 +236,6 @@ export default {
                 this.errored = true
             })
             .finally(() => this.loading = false)
-    },
-    unmounted () {
-        clearInterval( this.loadInterval )
     },
     methods: {
         /*
@@ -254,7 +253,7 @@ export default {
                 .then(response => {
                     this.pageIncrement += 5;
                     this.blockList = response.data.items;
-                    this.blockItems = [...this.blockList, ...this.blockList]
+                    this.blockItems = [...this.blockItems,...this.blockList]
                     console.log(this.blockItems)
                     // this.blockInfo.concat(this.blockList)
                     // this.blockInfo = [...this.blockList, ...this.blockList]
@@ -268,9 +267,9 @@ export default {
                 .finally(() => this.loading = false)
         },
     },
-    loadInterval() {
-        setInterval(this.blockInfo, 10000)
-    }
+    showMoreDetails() {
+        this.$refs.detailModal.moreDetails();
+    },
 };
 </script>
 
@@ -320,12 +319,6 @@ h1,
     bottom: 0;
     right: 0;
     left: 0;
-}
-
-.pagination-buttons {
-    position: absolute;
-    top: 27%;
-    left: 53%;
 }
 
 /*=========================  LEFT OF MAIN BOX  ===============================================*/
