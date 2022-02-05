@@ -1,95 +1,118 @@
 <template>
 <div id='main-container'>
+    <!--
+                        ====================================================================================================
+                            NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
+                            DATA PROPERTY WITHIN PARENT COMPONENT TO USE VIA THIS.BLOCKSEARCH
+                        ====================================================================================================
+                    -->
     <div id='nav-container-hugger'>
         <navOneApp />
-        <navTwoApp @blockWasSearched="blockSearch = $event" />
+        <navTwoApp @blockWasSearched="blockSearch = $event" class='nav-two' ref='nav-two-bar' />
     </div>
 
     <div id="main-content-container">
         <div class='left-of-main-box'>
-            <div class="timeline-box">
-                <div class='timeline-content'>
+            <!--
+                        ====================================================================================================
+                                            BLOCK CARD SEARCH CONDITIONAL RENDERING BEGINS
+                        ====================================================================================================
+                    -->
+            <section v-if="errored">
+                <p class='noDataMessage'>We're sorry, we're unable to retrieve block information at the moment, please try again later</p>
+            </section>
+            <div v-if="loading" class='loadMessage'>
+                <blockCardSkeleton-app class='skeleton-load' />
+                <blockCardSkeleton-app class='skeleton-load' />
+                <blockCardSkeleton-app class='skeleton-load' />
+            </div>
+            <!--
+                        ====================================================================================================
+                            RUNS AN IF CHECK IF NOT LOADING AND IS TRUE RENDER BELOW ELSE... 
+                        ====================================================================================================
+                    -->
 
-                    <section v-if="errored">
-                        <p class='noDataMessage'>We're sorry, we're unable to retrieve block information at the moment, please try again later</p>
-                    </section>
-                    <section v-else>
-                        <div v-if="loading" class='loadMessage'>Loading ETH Blocks...</div>
-
-                        <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="block in blockInfo" v-bind:key="block">
-                            <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
-                            <div class='left-of-blockcard'>
-                                <div class='block-pic-hugger'>
-                                    <img class='block-pic' :src="getImgUrl(block.meta.attributes[0].value)" />
-                                </div>
-                                <div class='mint-date'>
-                                    <p>Minted: {{block.meta.attributes[2].value}}</p>
-                                </div>
-                            </div>
-                            <div class='right-of-blockcard'>
-
-                                <div class='card-title'>
-                                    <h2>
-                                        {{block.meta.name}}
-                                    </h2>
-                                </div>
-                                <div class='card-owner-title'>
-                                    <p>
-                                        Owned by: {{block.owners[0]}}
-                                    </p>
-                                </div>
-                                <div class='comment-container'>
-                                    <p>
-                                        {{block.meta.description}}
-                                    </p>
-                                </div>
-                                <div class='details-container'>
-                                    <h1>
-                                        More info
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='block-card' v-else-if="!loading && !searchedMultiple">
-                            <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
-                            <div class='left-of-blockcard'>
-                                <div class='block-pic-hugger'>
-                                    <img class='block-pic' :src="getImgUrl(this.blockInfo.meta.attributes[0].value)" />
-                                </div>
-                                <div class='mint-date'>
-                                    <p>Minted: {{this.blockInfo.meta.attributes[2].value}}</p>
-                                </div>
-                            </div>
-                            <div class='right-of-blockcard'>
-
-                                <div class='card-title'>
-                                    <h2>
-                                        {{this.blockInfo.meta.name}}
-                                    </h2>
-                                </div>
-                                <div class='card-owner-title'>
-                                    <p>
-                                        Owned by: {{block.owners[0]}}
-                                    </p>
-                                </div>
-                                <div class='comment-container'>
-                                    <p>
-                                        {{this.blockInfo.meta.description}}
-                                    </p>
-                                </div>
-                                <div class='details-container'>
-                                    <h1>
-                                        More info
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
+            <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="block in blockInfo" v-bind:key="block">
+                <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
+                <div class='left-of-blockcard'>
+                    <div class='block-pic-hugger'>
+                        <img class='block-pic' :src="getImgUrl(block.meta.attributes[0].value)" />
+                    </div>
+                    <div class='mint-date'>
+                        <p>Minted: {{block.meta.attributes[2].value}}</p>
+                    </div>
+                </div>
+                <div class='right-of-blockcard'>
+                    <div class='card-title'>
+                        <h2>
+                            {{block.meta.name}}
+                        </h2>
+                    </div>
+                    <div class='card-owner-title'>
+                        <p>
+                            Owned by: {{block.owners[0]}}
+                        </p>
+                    </div>
+                    <div class='comment-container'>
+                        <p>
+                            {{block.meta.description}}
+                        </p>
+                    </div>
+                    <div class='details-container'>
+                        <h1>
+                            More info
+                        </h1>
+                    </div>
                 </div>
             </div>
+            <!--
+                        ====================================================================================================
+                        IF IT'S NOT LOADING AND ALSO IS FALSE MEANING THE USER IS SEARCHING FOR "ONE" 
+                        PARTICULAR BLOCK# OR HASH, IT WILL RENDER BELOW 
+                        ====================================================================================================
+                    -->
+            <div class='block-card' v-else-if="!loading && !searchedMultiple">
+                <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
+                <div class='left-of-blockcard'>
+                    <div class='block-pic-hugger'>
+                        <img class='block-pic' :src="getImgUrl(this.blockInfo.meta.attributes[0].value)" />
+                    </div>
+                    <div class='mint-date'>
+                        <p>Minted: {{this.blockInfo.meta.attributes[2].value}}</p>
+                    </div>
+                </div>
+                <div class='right-of-blockcard'>
+
+                    <div class='card-title'>
+                        <h2>
+                            {{this.blockInfo.meta.name}}
+                        </h2>
+                    </div>
+                    <div class='card-owner-title'>
+                        <p>
+                            Owned by: {{this.blockInfo.owners[0]}}
+                        </p>
+                    </div>
+                    <div class='comment-container'>
+                        <p>
+                            {{this.blockInfo.meta.description}}
+                        </p>
+                    </div>
+                    <div class='details-container'>
+                        <h1>
+                            More info
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <trigger-app @intersect="intersected" v-if="!loading && searchedMultiple" />
+            <p></p>
         </div>
+        <!--
+            ====================================================================================================
+                                        RIGHT SIDE OF MAIN CONTAINER
+            ====================================================================================================
+        -->
         <div class='right-of-main-box'>
             <img class='mew-icon' src='../assets/images/icon-mew-wallet.f29574d3.png' />
             <img class='mint-blob-block' src="../assets/images/block_img.png" alt="">
@@ -98,34 +121,55 @@
                 <h3>How does it work?</h3>
                 <p>Notable Ethereum blocks are minted as NFTs by the community and displayed here.
                     Comments are added by owners, and may or may not be accurate.</p>
-                <button>Mint Your ETH Block</button>
+                <a href="https://www.myetherwallet.com/wallet/dapps/eth-blocks/" target="_blank">
+                    <button>Mint Your ETH Block</button>
+                </a>
             </div>
         </div>
     </div>
+    <footer-app class='footer' ref='footer' />
 </div>
 </template>
 
 <script>
 import NavOne from '@/components/NavOne.vue'
 import NavTwo from '@/components/NavTwo.vue'
+import Footer from '@/components/Footer.vue'
+import Trigger from '@/components/Trigger.vue'
+import BlockCardSkeleton from '@/components/BlockCardSkeleton.vue'
 import axios from 'axios';
 
 export default {
     name: 'Main',
-    props: ['blockWasSearched'],
+    props: ['blockWasSearched', 'intersect'],
     components: {
         'navOneApp': NavOne,
-        'navTwoApp': NavTwo
+        'navTwoApp': NavTwo,
+        'footer-app': Footer,
+        'trigger-app': Trigger,
+        'blockCardSkeleton-app': BlockCardSkeleton
     },
     data() {
         return {
             blockSearch: '',
+            blockInfo: [],
+            blockList: [],
+            observerTriggered: false,
+            pageIncrement: 5,
             errored: false,
             loading: true,
-            searchedMultiple: true
+            blockPage: null,
+            searchedMultiple: true,
+            searchedHash: false,
         }
     },
     computed: {
+        /*
+            ====================================================================================================
+            THIS COMPUTED PROPERTY WILL SET A VARIABLE THAT WILL BE ON THE LOOK OUT FOR THE PROP BEING PASSED
+            IN FROM CHILD COMPONENT AND RUN A CONDITIONAL AND EXECUTE BASED ON WHAT THE SEARCH CRITERIA WAS.
+            ====================================================================================================
+         */
         blockSearchLink() {
             const hash = /\b([0x]+[a-f0-9]{40})\b/;
             if (this.blockSearch == '') {
@@ -135,9 +179,15 @@ export default {
             } else {
                 return 'https://ethereum-api.rarible.org/v0.1/nft/items/0x01234567bac6ff94d7e4f0ee23119cf848f93245:' + this.blockSearch;
             }
-        }
+        },
     },
     watch: {
+        /*
+            ====================================================================================================
+            THIS WATCH PROPERTY WILL PASS IN DATA VIA NEWVAL THAT BECOMES THE WHAT WE GRAB THEN RUNS THE API CALL
+            ONCE THAT PARAMETER IS PASSED, THEN SETS THE SEARCH MUTLIPLE STATE TO TRUE, WHICH THEN RENDERS THE PROPER BLOCK CARD
+            ====================================================================================================
+         */
         blockSearchLink(newVal) {
             this.loading = true;
             this.errored = false;
@@ -161,6 +211,11 @@ export default {
         }
     },
     mounted() {
+        /*
+            ====================================================================================================
+            ON RENDER WE WANT TO RENDER "10" BLOCKS FOR NOW
+            ====================================================================================================
+         */
         axios
             .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10')
             .then(response => {
@@ -173,12 +228,44 @@ export default {
             .finally(() => this.loading = false)
     },
     methods: {
+        /*
+            ====================================================================================================
+            THIS METHOD PASSES IN PARAMETERS WE'D  PASSS THROUGH INTO THE NEW API LINK TO FETCH 
+            ====================================================================================================
+         */
         getImgUrl(blockNumber) {
             return ('https://ethblocksdata.mewapi.io/1/' + blockNumber + '/image.png')
+        },
+        intersected() {
+            const querySize = this.pageIncrement + this.blockInfo.length
+            const query = ('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=' + querySize)
+            console.log(query)
+            axios
+                .get(query)
+                .then(response => {
+                    this.blockList = response.data.items
+                    this.blockInfo.concat(this.blockList.splice(this.blockInfo.length, this.blockInfo.length + this.pageIncrement + 1))
+                    // console.log('BLOCKINFO')
+                    // console.log(this.blockInfo);
+                    console.log('BLOCKLIST')
+                    console.log(this.blockList)
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errored = true
+                })
+                .finally(() => this.loading = false)
         }
     },
 };
 </script>
+
+
+
+
+
+
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
@@ -209,46 +296,53 @@ h1,
     display: flex;
     flex-direction: row;
     align-items: center;
-    /* overflow: hidden; */
 }
 
 .loadMessage {
-    margin-top: 50%;
+    margin-top: 0;
+}
+
+.loading-more-msg {
+    width: 80%;
+    text-align: center;
+}
+
+.skeleton-load {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.pagination-buttons {
+    position: absolute;
+    top: 27%;
+    left: 53%;
 }
 
 /*=========================  LEFT OF MAIN BOX  ===============================================*/
 /*=========================  LEFT OF MAIN BOX  ===============================================*/
 .left-of-main-box {
-    width: 57%;
+    width: 50%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     background-color: #F8F9FB;
     overflow-y: scroll;
-    overflow-x: hidden;
     scroll-behavior: smooth;
+    padding-left: 8%;
+    /* border: 1px solid black; */
 }
 
 .left-of-main-box::-webkit-scrollbar {
-    width: 0.3vw;
-    background-color: white;
+    width: 0.5vw;
+    background-color: rgb(244, 244, 244);
 }
 
 .left-of-main-box::-webkit-scrollbar-thumb {
-    width: 0.3vw;
+    width: 1.1vw;
     border-radius: 10px;
-    background-color: #E0E0E0;
-}
-
-.timeline-content {
-    width: 100%;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    position: relative;
-    margin-top: 0;
+    background-color: #05c0a491;
+    box-shadow: 1px 1px 5px rgb(222, 222, 222);
 }
 
 .block-card {
@@ -256,7 +350,7 @@ h1,
     height: 180px;
     border: none;
     display: flex;
-    margin: 25px;
+    margin: 15px;
     background: #FFFF;
     border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.226);
@@ -265,15 +359,6 @@ h1,
     overflow: hidden;
     z-index: 1;
     /* border: 1px solid black; */
-}
-
-.timeline-span {
-    height: 100%;
-    z-index: -1;
-    top: 0;
-    left: 18%;
-    position: absolute;
-    border: 2px solid grey;
 }
 
 .paint {

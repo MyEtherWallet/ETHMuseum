@@ -1,7 +1,6 @@
 <template>
     <div class='footer-container'>
         <p>© 2021 MyEtherWallet. All rights reserved.</p>
-
     </div>
 </template>
 

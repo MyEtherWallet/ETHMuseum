@@ -14,9 +14,8 @@
 </div>
 </template>
 
-<script>
-import axios from 'axios';
 
+<script>
 export default {
     name: 'NavOne',
     data() {
@@ -27,43 +26,9 @@ export default {
             searchError: ''
         }
     },
-    computed: {
-        rules() {
-            return [
-                this.searchError === '' || this.searchError,
-                (this.name && this.name.length > 2) ||
-                this.$t('ens.warning.not-enough-char'),
-                !this.hasInvalidChars || this.$t('ens.warning.invalid-symbol'),
-                (this.name && this.name.split('.').length <= 2) ||
-                this.$t('ens.warning.invalid-symbol')
-            ];
-        },
-        hasInvalidChars() {
-            const hash = /\b([0x]+[a-f0-9]{40})\b/;
-            if (!hash.test(this.blockSearchSubmit)) {
-                return true;
-            }
-            return false;
-        },
-    },
-    mounted() {
-        axios
-            .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=2000')
-            .then(response => {
-                this.initData = response.data.items;
-                console.log(this.initData)
-            })
-            .catch(error => {
-                console.log(error)
-                this.errored = true
-            })
-            .finally(() => this.loading = false)
-    },
     methods: {
         searchAttempt(e) {
             this.blockSearchInput = e.target.value;
-            // this.$emit('blockWasSearched', this.blockSearchInput);
-            // console.log(this.blockSearchInput);
         },
         submitSearch(e) {
             e.preventDefault();
