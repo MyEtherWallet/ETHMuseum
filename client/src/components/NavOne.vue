@@ -5,6 +5,9 @@
                 <h1>ETH Museum</h1>
                 <p class='slogan'>Own a piece of Ethereum History</p>
             </div>
+            <div>
+                <button class='connect-btn'>Connect Wallet</button>
+            </div>
     
     </div>
 </template>
@@ -29,7 +32,7 @@ export default {
         /* box-shadow: 5px 5px 10px rgba(100, 100, 100, 0.062);; */
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
     }
     .logo-block {
@@ -86,6 +89,13 @@ export default {
         transition: ease-in-out 200ms;
         cursor: pointer;
         background-color: #0bd9ba;
+    }
+    .connect-btn{
+        width: 180px;
+        height: 35px;
+        border-radius: 30px;
+        border: none;
+        margin-right: 35px;;
     }
 
 </style>

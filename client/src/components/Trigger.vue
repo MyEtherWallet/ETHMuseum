@@ -12,8 +12,8 @@ export default {
     mounted() {
         const options = {
             root: null,
-            threshold: 0.05,
-            rootMargin: "-20px"
+            threshold: 1,
+            rootMargin: "0px"
         };
         this.observer = new IntersectionObserver(([entry]) => {
             if (entry && entry.isIntersecting) {

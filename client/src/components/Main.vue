@@ -32,7 +32,7 @@
                         ====================================================================================================
                     -->
 
-            <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="block in blockItems" v-bind:key="block">
+            <div class='block-card' v-else-if="!loading && searchedMultiple" v-for="(block) in blockItems" v-bind:key="block">
                 <img class='paint' src='../assets/images/layered-peaks-haikei.svg' />
                 <div class='left-of-blockcard'>
                     <div class='block-pic-hugger'>
@@ -58,11 +58,23 @@
                             {{block.meta.description}}
                         </p>
                     </div>
+                    <!--
+                        ====================================================================================================
+                                                                MORE DETAILS CONTAINER
+                        ====================================================================================================
+                    -->
+
                     <div class='details-container'>
-                        <h1 @click="showMoreDetails">
-                            More info
-                        </h1>
-                        <detailModal-app ref='detailModal'/>
+                        <details>
+                            <summary @click="showDetail">More Info</summary>
+
+                            <ul>
+                                <li>{{block.meta.attributes[0].value}} transactions</li>
+                                <li>{{block.meta.attributes[1].value}} gas</li>
+                                <li>{{block.meta.attributes[2].value}} uncles</li>
+                            </ul>
+
+                        </details>
                     </div>
                 </div>
             </div>
@@ -100,11 +112,17 @@
                         </p>
                     </div>
                     <div class='details-container'>
-                        <h1 @click="showMoreDetails">
-                            More info
-                        </h1>
+                        <details>
+                            <summary @click="showDetail">More Info</summary>
+
+                            <ul>
+                                <li>{{this.blockInfo.meta.attributes[0].value}} transactions</li>
+                                <li>{{this.blockInfo.meta.attributes[1].value}} gas</li>
+                                <li>{{this.blockInfo.meta.attributes[2].value}} uncles</li>
+                            </ul>
+
+                        </details>
                     </div>
-                    <detailModal-app ref='detailModal' />
                 </div>
             </div>
             <!--
@@ -113,7 +131,9 @@
             ====================================================================================================
         -->
             <trigger-app @intersect="intersected" v-if="!loading && searchedMultiple" />
-            <p></p>
+            <blockCardSkeleton-app class='skeleton-load' />
+            <blockCardSkeleton-app class='skeleton-load' />
+            <blockCardSkeleton-app class='skeleton-load' />
         </div>
         <!--
             ====================================================================================================
@@ -143,7 +163,7 @@ import NavOne from '@/components/NavOne.vue'
 import NavTwo from '@/components/NavTwo.vue'
 import Footer from '@/components/Footer.vue'
 import Trigger from '@/components/Trigger.vue'
-import DetailModal from '@/components/DetailModal.vue'
+// import DetailModal from '@/components/DetailModal.vue'
 import BlockCardSkeleton from '@/components/BlockCardSkeleton.vue'
 import axios from 'axios';
 
@@ -156,7 +176,7 @@ export default {
         'footer-app': Footer,
         'trigger-app': Trigger,
         'blockCardSkeleton-app': BlockCardSkeleton,
-        'detailModal-app': DetailModal
+        // 'detailModal-app': DetailModal
     },
     data() {
         return {
@@ -164,7 +184,7 @@ export default {
             blockInfo: [],
             blockList: [],
             blockItems: [],
-            pageIncrement: 5,
+            pageIncrement: 10,
             errored: false,
             loading: true,
             blockPage: null,
@@ -227,7 +247,7 @@ export default {
             ====================================================================================================
          */
         axios
-            .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=100')
+            .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10')
             .then(response => {
                 this.blockInfo = response.data.items;
             })
@@ -251,14 +271,9 @@ export default {
             axios
                 .get('https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=' + this.pageIncrement)
                 .then(response => {
-                    this.pageIncrement += 5;
                     this.blockList = response.data.items;
-                    this.blockItems = [...this.blockItems,...this.blockList]
+                    this.blockItems = [...this.blockItems, ...this.blockList]
                     console.log(this.blockItems)
-                    // this.blockInfo.concat(this.blockList)
-                    // this.blockInfo = [...this.blockList, ...this.blockList]
-                    // this.blockInfo.concat(this.blockList.splice(this.blockInfo.length, this.blockInfo.length + pageIncrement - 1))
-                    // console.log(this.blockItems)
                 })
                 .catch(error => {
                     console.log(error)
@@ -266,10 +281,8 @@ export default {
                 })
                 .finally(() => this.loading = false)
         },
-    },
-    showMoreDetails() {
-        this.$refs.detailModal.moreDetails();
-    },
+    }
+
 };
 </script>
 
@@ -357,15 +370,15 @@ h1,
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    z-index: 1;
+    z-index: 0;
     /* border: 1px solid black; */
 }
 
 .paint {
     width: 100%;
-    bottom: -70px;
+    bottom: -92px;
     position: absolute;
-    z-index: -1;
+    z-index: 0;
 }
 
 .left-of-blockcard {
@@ -392,6 +405,7 @@ h1,
     display: flex;
     text-align: flex-start;
     flex-direction: column;
+    padding-right: 50px;
     /* border: 1px solid black; */
 }
 
@@ -417,36 +431,78 @@ h1,
 .comment-container {
     width: 100%;
     height: fit-content;
-    font-size: 12px;
+    font-size: 10px;
     text-align: left;
-    /* border: 1px solid black; */
 }
 
 .details-container {
     width: 100%;
-    height: 100%;
     display: flex;
-    /* border: 1px solid black; */
+    flex-direction: column;
+    text-align: left;
+    font-size: 8px;
+    z-index: 1;
 }
 
-.details-container h1 {
-    font-size: 12px;
-    font-weight: 700;
-    margin: 0;
-    cursor: pointer;
+.details-container ul {
+    height: 100%;
+    list-style: none;
+    color: #939FB9;
 }
 
 .details-container h1:hover {
     color: #5A678A
 }
 
-.right-of-details-container {
-    width: 50%;
-    height: 100%;
-    text-align: left;
-    /* border: 1px solid black; */
+details {
+    border: 1px solid rgba(170, 170, 170, 0.402);
+    border-radius: 4px;
+    padding: .5em .5em 0;
+    z-index: 2;
+    background-color: white;
 }
 
+summary {
+    font-weight: bold;
+    margin: -.5em -.5em 0;
+    padding: .5em;
+    text-align: left;
+    padding-bottom: -30px;
+}
+
+details[open] {
+    padding: .5em;
+    text-align: left;
+}
+
+details[open] summary {
+    margin-bottom: .5em;
+    z-index: 1;
+}
+
+.more-info-detail-container {
+    /*===============================*/
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.left-of-moredetail {
+    /*===============================*/
+    display: none;
+    width: 55%;
+    height: 100%;
+
+}
+
+.right-of-moredetail {
+    /*===============================*/
+    display: none;
+    width: 50%;
+    height: 100%;
+}
+
+/*===============================*/
 .block-pic {
     width: 50px;
     height: 50px;
