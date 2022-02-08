@@ -1,9 +1,6 @@
 <template>
 <div class='home-container'>
-    <!-- <Main /> -->
-    <!-- <Web3 /> -->
     <Web3Modal />
-    <!-- <MewConnect /> -->
 </div>
 </template>
 
@@ -12,7 +9,8 @@
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import MewConnect from "@myetherwallet/mewconnect-web-client";
-// import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import Authereum from "authereum";
 
 
 export default {
@@ -44,19 +42,22 @@ export default {
                         rpc: "https://nodes.mewapi.io/rpc/eth"
                     }
                 },
-                // walletconnect: {
-                //     package: WalletConnectProvider, // required
-                //     options: {
-                //         infuraId: "27e484dcd9e3efcfd25a83a78777cdf1" // required
-                //     }
-                // }
+                walletconnect: {
+                    package: WalletConnectProvider, // required
+                    options: {
+                        infuraId: "27e484dcd9e3efcfd25a83a78777cdf1" // required
+                    }
+                },
+                authereum: {
+                    package: Authereum // required
+                }
             };
             web3Modal = new Web3Modal({
                 network: "mainnet", // optional
                 cacheProvider: true, // optional
                 providerOptions // required
             });
-            
+
             provider = await web3Modal.connect();
 
             provider.on("connect", (info: {

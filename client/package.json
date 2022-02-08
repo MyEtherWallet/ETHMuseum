@@ -10,6 +10,7 @@
   "dependencies": {
     "@myetherwallet/mewconnect-web-client": "^2.2.0-beta.16",
     "@walletconnect/web3-provider": "^1.7.1",
+    "authereum": "^0.1.14",
     "axios": "^0.25.0",
     "commitlint": "^16.1.0",
     "core-js": "^3.6.5",
