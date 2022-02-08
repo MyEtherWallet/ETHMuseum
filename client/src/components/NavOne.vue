@@ -6,15 +6,21 @@
                 <p class='slogan'>Own a piece of Ethereum History</p>
             </div>
             <div>
-                <button class='connect-btn'>Connect Wallet</button>
+                <button @click="connectWallet" class='connect-btn'>Connect Wallet</button>
             </div>
-    
     </div>
 </template>
 
 <script>
 export default {
     name: 'NavOne',
+    methods: {
+        connectWallet(e) {
+            e.preventDefault()
+            this.$emit('connectWallet', true)
+        }
+    }
+    
 }
 </script>
 

@@ -1,13 +1,13 @@
 <template>
 <div id='main-container'>
-    <!--
+                    <!--
                         ====================================================================================================
                             NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
                             DATA PROPERTY WITHIN PARENT COMPONENT TO USE VIA THIS.BLOCKSEARCH
                         ====================================================================================================
                     -->
     <div id='nav-container-hugger'>
-        <navOneApp />
+        <navOneApp @connectWallet="connectingToWallet = $event"/>
         <navTwoApp @blockWasSearched="blockSearch = $event" class='nav-two' ref='nav-two-bar' />
     </div>
 
@@ -67,12 +67,9 @@
                     <div class='details-container'>
                         <details>
                             <summary @click="showDetail">More Info</summary>
-
-                            <ul>
-                                <li>{{block.meta.attributes[0].value}} transactions</li>
-                                <li>{{block.meta.attributes[1].value}} gas</li>
-                                <li>{{block.meta.attributes[2].value}} uncles</li>
-                            </ul>
+                            <p>{{block.meta.attributes[0].value}} transactions</p>
+                            <p>{{block.meta.attributes[1].value}} gas</p>
+                            <p>{{block.meta.attributes[2].value}} uncles</p>
 
                         </details>
                     </div>
@@ -154,29 +151,30 @@
             </div>
         </div>
     </div>
+    <web3-app  v-if="connectingToWalletModal" />
     <footer-app class='footer' ref='footer' />
 </div>
 </template>
 
 <script>
+import Web3PointOh from '@/components/Web3.vue'
 import NavOne from '@/components/NavOne.vue'
 import NavTwo from '@/components/NavTwo.vue'
 import Footer from '@/components/Footer.vue'
 import Trigger from '@/components/Trigger.vue'
-// import DetailModal from '@/components/DetailModal.vue'
 import BlockCardSkeleton from '@/components/BlockCardSkeleton.vue'
 import axios from 'axios';
 
 export default {
     name: 'Main',
-    props: ['blockWasSearched', 'intersect'],
+    props: ['blockWasSearched', 'intersect', 'connectWallet'],
     components: {
         'navOneApp': NavOne,
         'navTwoApp': NavTwo,
         'footer-app': Footer,
         'trigger-app': Trigger,
         'blockCardSkeleton-app': BlockCardSkeleton,
-        // 'detailModal-app': DetailModal
+        'web3-app' : Web3PointOh
     },
     data() {
         return {
@@ -190,6 +188,7 @@ export default {
             blockPage: null,
             searchedMultiple: true,
             searchedHash: false,
+            connectingToWallet: false
         }
     },
     computed: {
@@ -209,6 +208,10 @@ export default {
                 return 'https://ethereum-api.rarible.org/v0.1/nft/items/0x01234567bac6ff94d7e4f0ee23119cf848f93245:' + this.blockSearch;
             }
         },
+        connectingToWalletModal() {
+            console.log(this.connectingToWallet)
+            return this.connectingToWallet;
+        }
     },
     watch: {
         /*

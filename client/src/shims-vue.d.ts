@@ -4,3 +4,9 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+/* eslint-disable */
+declare module "@myetherwallet/mewconnect-web-client" {
+  import type {DefineComponent} from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}
