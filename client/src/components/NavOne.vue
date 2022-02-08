@@ -7,7 +7,7 @@
     </div>
     <div>
         <button @click="connectWallet" class='connect-btn'>Connect Wallet</button>
-        <button @click="connectWallet" class='disconnect-btn'>Disconnect Wallet</button>
+        <button @click="discConnectWallet" class='disconnect-btn'>Disconnect Wallet</button>
     </div>
 </div>
 </template>
@@ -19,6 +19,10 @@ export default {
         connectWallet(e) {
             e.preventDefault()
             this.$emit('connectWallet', true)
+        },
+        disConnectWallet(e) {
+            e.preventDefault();
+            this.$emit('disConnectWallet', false)
         }
     }
 

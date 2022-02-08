@@ -6,11 +6,12 @@
                             DATA PROPERTY WITHIN PARENT COMPONENT TO USE VIA THIS.BLOCKSEARCH
                         ====================================================================================================
                     -->
+
     <div id='nav-container-hugger'>
-        <navOneApp @connectWallet="connectingToWallet = $event"/>
+        <navOneApp @connectWallet="connectingToWallet = $event" @disConnectWallet="disConnectingFromWallet = $event"/>
         <navTwoApp @blockWasSearched="blockSearch = $event" class='nav-two' ref='nav-two-bar' />
     </div>
-
+        <web3-app  v-if="connectingToWalletModal" />
     <div id="main-content-container">
         <div class='left-of-main-box'>
             <!--
@@ -151,7 +152,6 @@
             </div>
         </div>
     </div>
-    <web3-app  v-if="connectingToWalletModal" />
     <footer-app class='footer' ref='footer' />
 </div>
 </template>
@@ -167,7 +167,7 @@ import axios from 'axios';
 
 export default {
     name: 'Main',
-    props: ['blockWasSearched', 'intersect', 'connectWallet'],
+    props: ['blockWasSearched', 'intersect', 'connectWallet', 'disConnectWallet'],
     components: {
         'navOneApp': NavOne,
         'navTwoApp': NavTwo,
@@ -188,7 +188,8 @@ export default {
             blockPage: null,
             searchedMultiple: true,
             searchedHash: false,
-            connectingToWallet: false
+            connectingToWallet: false,
+            disConnectFromWallet: true,
         }
     },
     computed: {
@@ -209,8 +210,10 @@ export default {
             }
         },
         connectingToWalletModal() {
-            console.log(this.connectingToWallet)
             return this.connectingToWallet;
+        },
+        disConnectFromWalletModal() {
+            return this.disConnectFromWallet;
         }
     },
     watch: {
@@ -578,7 +581,7 @@ details[open] summary {
 .mint-blob-block {
     width: 290px;
     height: 350px;
-    top: 33%;
+    top: 30%;
     border-radius: 50%;
     opacity: 0.6;
     position: absolute;
