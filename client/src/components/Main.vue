@@ -8,8 +8,8 @@
                     -->
 
     <div id='nav-container-hugger'>
-        <navOneApp @connectWallet="connectingToWallet = $event" @disConnectWallet="disConnectingFromWallet = $event"/>
-        <navTwoApp @blockWasSearched="blockSearch = $event" class='nav-two' ref='nav-two-bar' />
+        <navOneApp @connectWallet="connectingToWallet = $event" />
+        <navTwoApp @blockWasSearched="blockSearch = $event" class='nav-two' ref='navTwoBar' />
     </div>
         <web3-app  v-if="connectingToWalletModal" />
     <div id="main-content-container">
@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import Web3PointOh from '@/components/Web3.vue'
+import Web3 from '@/components/Web3.vue'
 import NavOne from '@/components/NavOne.vue'
 import NavTwo from '@/components/NavTwo.vue'
 import Footer from '@/components/Footer.vue'
@@ -174,7 +174,7 @@ export default {
         'footer-app': Footer,
         'trigger-app': Trigger,
         'blockCardSkeleton-app': BlockCardSkeleton,
-        'web3-app' : Web3PointOh
+        'web3-app' : Web3
     },
     data() {
         return {
@@ -189,7 +189,7 @@ export default {
             searchedMultiple: true,
             searchedHash: false,
             connectingToWallet: false,
-            disConnectFromWallet: true,
+            // disConnectFromWallet: true,
         }
     },
     computed: {
@@ -244,7 +244,10 @@ export default {
                     this.errored = true
                 })
                 .finally(() => this.loading = false)
-        }
+        },
+        // disConnectFromWalletModal () {
+        //     this.connectingToWallet = true;
+        // }
     },
     mounted() {
         /*

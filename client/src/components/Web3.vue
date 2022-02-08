@@ -14,12 +14,12 @@ import Authereum from "authereum";
 
 
 export default {
-    name: 'Web3PointOh',
+    name: 'Web3',
     data() {
         return {
             loading: false,
-            number: '',
-            string: ''
+            currentUser: '',
+            userHasSignedOn: true
         }
     },
     mounted() {
@@ -34,7 +34,7 @@ export default {
             let provider;
             let web3;
             let providerOptions;
-            console.log('variables created')
+
             providerOptions = {
                 mewconnect: {
                     package: MewConnect, // required
@@ -60,21 +60,13 @@ export default {
 
             provider = await web3Modal.connect();
 
-            provider.on("connect", (info: {
-                chainId: number
-            }) => {
-                console.log(info)
-            })
-            provider.on("disconnect", (error: {
-                code: number;message: string
-            }) => {
-                console.log(error);
-            });
+            provider.on("connect", (info: {chainId: number }) => {console.log(info)})
+            provider.on("disconnect", (error: {code: number;message: string}) => {console.log(error);});
+            
             web3 = new Web3(provider);
             return web3
         }
-    }
-
+    },
 }
 </script>
 
