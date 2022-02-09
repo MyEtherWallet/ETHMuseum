@@ -4,6 +4,7 @@
 
 <script>
 export default {
+    /* eslint-disable */
     name: 'Trigger',
     props: ['options'],
     data: () => ({
@@ -19,14 +20,10 @@ export default {
             if (entry && entry.isIntersecting) {
                 this.$emit("intersect");
                 console.log('Observer TRIGGERED!')
-                // console.log(entry)
+
             }
         }, options);
         this.observer.observe(this.$refs.trigger);
-                // console.log(options)
-        // console.log(this.observer)
-        // console.log(this.options)
-        // console.log(this.trigger)
     },
     beforeUnmount() {
         this.observer.disconnect();

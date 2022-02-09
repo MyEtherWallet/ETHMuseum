@@ -10,14 +10,15 @@
       <p class="slogan">Own a piece of Ethereum History</p>
     </div>
     <div>
-      <button @click="connectWallet" class="connect-btn">
+      <button  
+      class="connect-btn"  
+      @click="connectWallet">
         {{ buttonName }}
       </button>
-      <button
-        @click="discConnectWallet"
-        class="disconnect-btn"
-        v-if="hasConnected"
-      >
+      <button 
+      v-if="hasConnected" 
+      class="disconnect-btn" 
+      @click="discConnectWallet">
         Disconnect Wallet
       </button>
     </div>
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   name: "NavOne",
   props: {
@@ -39,7 +41,7 @@ export default {
     connectWallet(e) {
       e.preventDefault();
       this.$emit("connectWallet", true);
-    },
+    }
   },
 };
 </script>

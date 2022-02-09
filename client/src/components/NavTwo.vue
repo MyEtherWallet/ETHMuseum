@@ -5,7 +5,7 @@
         <a href="#">Blocks with comments</a>
         <a href="#">Most liked</a>
         <div>
-            <input v-model="blockSearchInput" @input="searchAttempt" type="text" placeholder="Block # or hash.." />
+            <input v-model="blockSearchInput" type="text" placeholder="Block # or hash.." @input="searchAttempt"  />
             <button @click="submitSearch">Search Block</button>
         </div>
     </div>
@@ -20,10 +20,10 @@ export default {
     name: 'NavOne',
     data() {
         return {
-            initData: '',
+            // initData: '',
             blockSearchInput: '',
             blockSearchSubmit: '',
-            searchError: ''
+            // searchError: ''
         }
     },
     methods: {
