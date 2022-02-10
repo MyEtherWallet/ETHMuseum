@@ -396,7 +396,6 @@ h1,
     background: #ffff;
     border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.226);
-    cursor: pointer;
     position: relative;
     overflow: hidden;
     z-index: 0;
@@ -407,7 +406,7 @@ h1,
     width: 100%;
     bottom: -75px;
     position: absolute;
-    z-index: 0;
+    z-index: -1;
 }
 
 .left-of-blockcard {
@@ -472,6 +471,7 @@ h1,
     font-size: 8px;
     z-index: 1;
     line-height: 2px;
+    cursor: pointer;
 }
 
 .details-container ul {
