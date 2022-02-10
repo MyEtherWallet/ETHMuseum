@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts">
-// import Main from '@/components/Main.vue';
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import MewConnect from "@myetherwallet/mewconnect-web-client";
@@ -14,6 +13,11 @@ import Authereum from "authereum";
 
 export default {
     name: "Web3",
+    data() {
+        return {  
+            web3Modal: null,
+        }
+    },
     mounted() {
         // @ts-ignore
         this.getWeb3();
@@ -42,15 +46,23 @@ export default {
                 cacheProvider: false, // optional
                 providerOptions, // required
             });
+              // @ts-ignore
+            this.web3Modal = web3Modal;
 
             const provider = await web3Modal.connect();
             const web3 = new Web3(provider);
             const accounts = await web3.eth.getAccounts();
-            // @ts-ignore
+             // @ts-ignore
             this.$emit("accountsChanged", accounts[0]);
             return web3;
         },
-    },
+        async disConnect() {
+              // @ts-ignore
+            await this.web3Modal.clearCachedProvider();
+              // @ts-ignore
+            this.$emit("disconnectWallet")
+        },
+    }
 };
 </script>
 

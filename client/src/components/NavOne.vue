@@ -9,40 +9,57 @@
       <h1>ETH Museum</h1>
       <p class="slogan">Own a piece of Ethereum History</p>
     </div>
+
     <div>
-      <button  
+      <button
+      v-if="hasNotConnected"
       class="connect-btn"  
       @click="connectWallet">
-        {{ buttonName }}
+        Connect Wallet
       </button>
+
       <button 
-      v-if="hasConnected" 
-      class="disconnect-btn" 
-      @click="discConnectWallet">
+      v-else
+      class="disconnect-btn"
+      @click="disConnectWeb3">
         Disconnect Wallet
       </button>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* eslint-disable */
 export default {
   name: "NavOne",
   props: {
-    buttonName: String,
+    walletId: String,
   },
   data() {
     return {
-      hasConnected: true,
+      hasNotConnected: true,
     };
   },
   methods: {
     connectWallet(e) {
       e.preventDefault();
+      console.log('attempting to connect from NavOne')
       this.$emit("connectWallet", true);
+    },
+    disConnectWeb3(e) {
+      e.preventDefault();
+      this.$emit("disconnectWeb3")
     }
   },
+  watch: {
+    walletId (newVal) {
+      if (newVal !== '') {
+        this.hasNotConnected = false;
+      } else {
+        this.hasNotConnected = true;
+      }
+    },
+  }
 };
 </script>
 
@@ -136,7 +153,6 @@ button:hover {
   border-radius: 30px;
   border: none;
   margin-right: 35px;
-  display: block;
 }
 
 .disconnect-btn {
@@ -145,6 +161,6 @@ button:hover {
   border-radius: 30px;
   border: none;
   margin-right: 35px;
-  display: none;
+  /* display: none; */
 }
 </style>

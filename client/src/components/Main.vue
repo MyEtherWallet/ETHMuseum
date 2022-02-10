@@ -8,10 +8,10 @@
                     -->
 
     <div id="nav-container-hugger">
-        <navOneApp :button-name="buttonName" @connectWallet="connectingToWallet = $event" />
-        <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event"  />
+        <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3"/>
+        <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" />
     </div>
-    <web3-app v-if="connectingToWalletModal" @accountsChanged="accountsChanged"  />
+    <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" />
     <div id="main-content-container">
         <div class="left-of-main-box">
             <!--
@@ -170,7 +170,7 @@ import axios from "axios";
 export default {
     name: "Main",
     // @ts-ignore
-    props: ["blockWasSearched", "intersect", "connectWallet", "disConnectWallet"],
+    props: ["blockWasSearched", "intersect", "connectWallet", "disconnectWeb3"],
     components: {
         navOneApp: NavOne,
         navTwoApp: NavTwo,
@@ -192,7 +192,7 @@ export default {
             searchedMultiple: true,
             searchedHash: false,
             connectingToWallet: false,
-            buttonName: "Connect Wallet",
+            walletId: ''
         };
     },
     computed: {
@@ -219,10 +219,8 @@ export default {
             }
         },
         connectingToWalletModal() {
+            console.log('connecting to wallet modal from main')
             return this.connectingToWallet;
-        },
-        disConnectFromWalletModal() {
-            return this.disConnectFromWallet;
         },
     },
     watch: {
@@ -276,7 +274,16 @@ export default {
     },
     methods: {
         accountsChanged(newaccount) {
-            this.buttonName = newaccount;
+            console.log('attempting to connect from Main')
+            this.walletId = newaccount;
+            console.log(`User ${this.walletId} has successfully signed on!`)
+        },
+        disconnectWeb3() {
+            this.$refs.web3Ref.disConnect();
+        },
+        disconnectWallet() {
+            this.walletId = ''
+            console.log(`Current user ${this.walletId} has completely signed out!`)
         },
         /*
                 ====================================================================================================
