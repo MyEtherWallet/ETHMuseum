@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 /* eslint-disable */
 export default {
   name: "NavOne",
@@ -52,7 +52,7 @@ export default {
     }
   },
   watch: {
-    walletId (newVal) {
+    walletId(newVal) {
       if (newVal !== '') {
         this.hasNotConnected = false;
       } else {

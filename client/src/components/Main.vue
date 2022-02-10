@@ -564,7 +564,7 @@ details[open] summary {
     width: 90px;
     height: 90px;
     position: absolute;
-    top: 32%;
+    top: 30%;
     z-index: 2;
     animation: minticonmove 2s linear infinite;
 }
