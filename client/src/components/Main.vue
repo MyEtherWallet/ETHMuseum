@@ -405,7 +405,7 @@ h1,
 
 .paint {
     width: 100%;
-    bottom: -92px;
+    bottom: -75px;
     position: absolute;
     z-index: 0;
 }
@@ -460,7 +460,7 @@ h1,
 .comment-container {
     width: 100%;
     height: fit-content;
-    font-size: 10px;
+    font-size: 9px;
     text-align: left;
 }
 
@@ -471,12 +471,13 @@ h1,
     text-align: left;
     font-size: 8px;
     z-index: 1;
+    line-height: 2px;
 }
 
 .details-container ul {
     height: 100%;
     list-style: none;
-    color: #939fb9;
+    color: #9398a3;
 }
 
 .details-container h1:hover {
