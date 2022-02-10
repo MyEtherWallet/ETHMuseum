@@ -14,8 +14,10 @@ import Authereum from "authereum";
 export default {
     name: "Web3",
     data() {
-        return {  
+        return {
             web3Modal: null,
+            web3: null,
+            provider: null,
         }
     },
     mounted() {
@@ -46,21 +48,28 @@ export default {
                 cacheProvider: false, // optional
                 providerOptions, // required
             });
-              // @ts-ignore
+            // @ts-ignore
             this.web3Modal = web3Modal;
 
             const provider = await web3Modal.connect();
             const web3 = new Web3(provider);
             const accounts = await web3.eth.getAccounts();
-             // @ts-ignore
+            // @ts-ignore
+            this.provider = provider;
+            console.log(provider)
+            // @ts-ignore
+            this.web3 = web3;
+            // @ts-ignore
             this.$emit("accountsChanged", accounts[0]);
             return web3;
         },
         async disConnect() {
-              // @ts-ignore
-            await this.web3Modal.clearCachedProvider();
-              // @ts-ignore
-            this.$emit("disconnectWallet")
+                // @ts-ignore
+                await this.web3Modal.clearCachedProvider();
+                // @ts-ignore
+                await this.provider.disconnect();
+                // @ts-ignore
+                this.$emit("disconnectWallet");
         },
     }
 };

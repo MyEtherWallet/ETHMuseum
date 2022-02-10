@@ -219,7 +219,6 @@ export default {
             }
         },
         connectingToWalletModal() {
-            console.log('connecting to wallet modal from main')
             return this.connectingToWallet;
         },
     },
@@ -274,7 +273,7 @@ export default {
     },
     methods: {
         accountsChanged(newaccount) {
-            console.log('attempting to connect from Main')
+            console.log('attempting to connect...')
             this.walletId = newaccount;
             console.log(`User ${this.walletId} has successfully signed on!`)
         },
@@ -282,8 +281,9 @@ export default {
             this.$refs.web3Ref.disConnect();
         },
         disconnectWallet() {
-            this.walletId = ''
             console.log(`Current user ${this.walletId} has completely signed out!`)
+            this.walletId = ''
+            this.connectingToWallet = false;
         },
         /*
                 ====================================================================================================
