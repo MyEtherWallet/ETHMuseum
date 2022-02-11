@@ -1,18 +1,23 @@
 <template>
 <div id="main-container">
-    <!--
+                <!--
+                        ====================================================================================================
+                                                                RENDERED MODALS
+                        ====================================================================================================
+                    -->
+    <detail-modal-app ref="modalRef"/>
+    <edit-description-app ref="editDesctiptionModalref"/>
+                    <!--
                         ====================================================================================================
                             NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
                             DATA PROPERTY WITHIN PARENT COMPONENT TO USE VIA THIS.BLOCKSEARCH
                         ====================================================================================================
                     -->
-
     <div id="nav-container-hugger">
         <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3"/>
         <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" />
     </div>
     <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" />
-    <detail-modal-app ref="modalRef"/>
     <div id="main-content-container">
         <div class="left-of-main-box">
             <!--
@@ -59,6 +64,9 @@
                     <div class="comment-container">
                         <p>
                             {{ block.meta.description }}
+                            <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span>
+                            <!-- <span v-if="block.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
+                            <!-- <span v-if="block.meta.owners.includes(walletId)">edit</span> -->
                         </p>
                     </div>
                     <!--
@@ -99,7 +107,7 @@
                     </div>
                     <div class="comment-container">
                         <p>
-                            {{ blockInfo.meta.description }}
+                            {{ blockInfo.meta.description }} 
                         </p>
                     </div>
                     <div class="details-container">
@@ -161,7 +169,7 @@ import NavTwo from "@/components/NavTwo.vue";
 import Footer from "@/components/Footer.vue";
 import Trigger from "@/components/Trigger.vue";
 import BlockCardSkeleton from "@/components/BlockCardSkeleton.vue";
-import EditDescription from '@/components/EditDescription.vue';
+import EditModal from '@/components/EditModal.vue';
 import DetailModal from '@/components/DetailModal.vue';
 import axios from "axios";
 
@@ -177,7 +185,7 @@ export default {
         "trigger-app": Trigger,
         "blockCardSkeleton-app": BlockCardSkeleton,
         "detail-modal-app": DetailModal,
-        "edit-description-app": EditDescription,
+        "edit-description-app": EditModal,
         "web3-app": Web3,
     },
     data() {
@@ -314,6 +322,9 @@ export default {
         },
         showMoreDetailModal(blockItemInfo) {
             this.$refs.modalRef.moreDetails(blockItemInfo);
+        },
+        openEditDescriptionModal(blockItemInfo) {
+            this.$refs.editDesctiptionModalref.editDescription(blockItemInfo)
         }
     },
 };
@@ -466,6 +477,15 @@ h1,
     height: fit-content;
     font-size: 9px;
     text-align: left;
+}
+.edit-description-button{
+    font-weight: 600;
+    font-size: 9.5px;
+    cursor: pointer;
+}
+.edit-description-button:hover{
+    color: #939FB9;
+
 }
 
 .details-container {
