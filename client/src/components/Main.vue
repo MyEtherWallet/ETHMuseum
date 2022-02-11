@@ -12,6 +12,7 @@
         <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" />
     </div>
     <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" />
+    <detail-modal-app ref="modalRef"/>
     <div id="main-content-container">
         <div class="left-of-main-box">
             <!--
@@ -36,7 +37,7 @@
                         ====================================================================================================
                     -->
 
-            <div v-for="block in blockItems" v-else-if="!loading && searchedMultiple" :key="block" class="block-card">
+            <div v-for="(block, index) in blockItems" v-else-if="!loading && searchedMultiple" :key="block" class="block-card" >
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
@@ -67,12 +68,7 @@
                     -->
 
                     <div class="details-container">
-                        <details>
-                            <summary @click="showDetail">More Info</summary>
-                            <p>{{ block.meta.attributes[0].value }} transactions</p>
-                            <p>{{ block.meta.attributes[1].value }} gas</p>
-                            <p>{{ block.meta.attributes[2].value }} uncles</p>
-                        </details>
+                        <h1 @click="showMoreDetailModal(blockItems[index])">More Info</h1>
                     </div>
                 </div>
             </div>
@@ -165,7 +161,10 @@ import NavTwo from "@/components/NavTwo.vue";
 import Footer from "@/components/Footer.vue";
 import Trigger from "@/components/Trigger.vue";
 import BlockCardSkeleton from "@/components/BlockCardSkeleton.vue";
+import EditDescription from '@/components/EditDescription.vue';
+import DetailModal from '@/components/DetailModal.vue';
 import axios from "axios";
+
 
 export default {
     name: "Main",
@@ -177,6 +176,8 @@ export default {
         "footer-app": Footer,
         "trigger-app": Trigger,
         "blockCardSkeleton-app": BlockCardSkeleton,
+        "detail-modal-app": DetailModal,
+        "edit-description-app": EditDescription,
         "web3-app": Web3,
     },
     data() {
@@ -192,7 +193,7 @@ export default {
             searchedMultiple: true,
             searchedHash: false,
             connectingToWallet: false,
-            walletId: ''
+            walletId: '',
         };
     },
     computed: {
@@ -311,6 +312,9 @@ export default {
                 })
                 .finally(() => (this.loading = false));
         },
+        showMoreDetailModal(blockItemInfo) {
+            this.$refs.modalRef.moreDetails(blockItemInfo);
+        }
     },
 };
 </script>
@@ -399,6 +403,7 @@ h1,
     position: relative;
     overflow: hidden;
     z-index: 0;
+    /* cursor: pointer; */
     /* border: 1px solid black; */
 }
 
@@ -474,61 +479,15 @@ h1,
     cursor: pointer;
 }
 
-.details-container ul {
+.details-container h1 {
     height: 100%;
     list-style: none;
-    color: #9398a3;
+    color: #343d53;
+    font-size: 10px;
 }
 
 .details-container h1:hover {
-    color: #5a678a;
-}
-
-details {
-    border: 1px solid rgba(170, 170, 170, 0.402);
-    border-radius: 4px;
-    padding: 0.5em 0.5em 0;
-    z-index: 2;
-    background-color: white;
-}
-
-summary {
-    font-weight: bold;
-    margin: -0.5em -0.5em 0;
-    padding: 0.5em;
-    text-align: left;
-    padding-bottom: -30px;
-}
-
-details[open] {
-    padding: 0.5em;
-    text-align: left;
-}
-
-details[open] summary {
-    margin-bottom: 0.5em;
-    z-index: 1;
-}
-
-.more-info-detail-container {
-    /*===============================*/
-    width: 100%;
-    height: 100%;
-    display: flex;
-}
-
-.left-of-moredetail {
-    /*===============================*/
-    display: none;
-    width: 55%;
-    height: 100%;
-}
-
-.right-of-moredetail {
-    /*===============================*/
-    display: none;
-    width: 50%;
-    height: 100%;
+    color: #939FB9;
 }
 
 /*===============================*/
