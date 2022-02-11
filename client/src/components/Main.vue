@@ -65,7 +65,7 @@
                         <p>
                             {{ block.meta.description }}
                             <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span>
-                            <!-- <span v-if="block.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
+                            <span v-if="block.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span>
                             <!-- <span v-if="block.meta.owners.includes(walletId)">edit</span> -->
                         </p>
                     </div>
@@ -86,6 +86,7 @@
                         PARTICULAR BLOCK# OR HASH, IT WILL RENDER BELOW 
                         ====================================================================================================
                     -->
+            <!-- <div v-else-if="!loading && !searchedMultiple && blockInfo.owners[0] == walletId" class="block-card"> -->
             <div v-else-if="!loading && !searchedMultiple" class="block-card">
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
