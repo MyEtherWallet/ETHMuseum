@@ -64,9 +64,8 @@
                     <div class="comment-container">
                         <p>
                             {{ block.meta.description }}
-                            <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span>
+                            <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
                             <span v-if="block.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span>
-                            <!-- <span v-if="block.meta.owners.includes(walletId)">edit</span> -->
                         </p>
                     </div>
                     <!--
