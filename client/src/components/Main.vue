@@ -65,7 +65,11 @@
                         <p>
                             {{ block.meta.description }}
                             <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
-                            <span v-if="block.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span>
+                            <span 
+                                v-if="block.owners[0] === walletId" 
+                                class='edit-description-button' 
+                                @click="openEditDescriptionModal(blockItems[index])">edit
+                            </span>
                         </p>
                     </div>
                     <!--
@@ -111,17 +115,11 @@
                         </p>
                     </div>
                     <div class="details-container">
-                        <details>
-                            <summary @click="showDetail">More Info</summary>
-
-                            <ul>
-                                <li>
-                                    {{ blockInfo.meta.attributes[0].value }} transactions
-                                </li>
-                                <li>{{ blockInfo.meta.attributes[1].value }} gas</li>
-                                <li>{{ blockInfo.meta.attributes[2].value }} uncles</li>
-                            </ul>
-                        </details>
+                        <span 
+                            v-if="blockInfo.owners[0] === walletId" 
+                            class='edit-description-button' 
+                            @click="openEditDescriptionModal(blockItems[index])">edit
+                        </span>
                     </div>
                 </div>
             </div>
@@ -131,9 +129,7 @@
             ====================================================================================================
         -->
             <trigger-app v-if="!loading && searchedMultiple" @intersect="intersected"  />
-            <blockCardSkeleton-app class="skeleton-load" />
-            <blockCardSkeleton-app class="skeleton-load" />
-            <blockCardSkeleton-app class="skeleton-load" />
+            <p></p>
         </div>
         <!--
             ====================================================================================================
@@ -202,6 +198,7 @@ export default {
             searchedHash: false,
             connectingToWallet: false,
             walletId: '',
+            // walletId:"0x166af1addbf6f4e535ccb344a68d84ff36a59666",
         };
     },
     computed: {
@@ -283,7 +280,8 @@ export default {
     methods: {
         accountsChanged(newaccount) {
             console.log('attempting to connect...')
-            this.walletId = newaccount;
+            // this.walletId = newaccount;
+            this.walletId = "0x4989e1ab5e7cd00746b3938ef0f0d064a2025ba5"
             console.log(`User ${this.walletId} has successfully signed on!`)
         },
         disconnectWeb3() {
@@ -465,7 +463,7 @@ h1,
 
 .card-owner-title {
     width: 100%;
-    height: 30px;
+    height: 22px;
     text-align: left;
     font-size: 12px;
     margin-top: -28px;
@@ -475,13 +473,15 @@ h1,
 .comment-container {
     width: 100%;
     height: fit-content;
-    font-size: 9px;
+    font-size:11px;
     text-align: left;
 }
 .edit-description-button{
-    font-weight: 600;
-    font-size: 9.5px;
+    font-weight: 800;
+    font-size: 9px;
     cursor: pointer;
+    margin-left: 5px;
+    color:#FF445B;
 }
 .edit-description-button:hover{
     color: #939FB9;

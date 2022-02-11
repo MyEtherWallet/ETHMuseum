@@ -28,7 +28,6 @@ export default {
         editDescription(blockItemInfo) {
             this.blockItem = blockItemInfo;
             this.isEditModalActive = true;
-            console.log(this.blockItem)
         },
         closeModal() {
             this.isEditModalActive = false

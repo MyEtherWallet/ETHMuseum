@@ -20,10 +20,8 @@ export default {
     name: 'NavOne',
     data() {
         return {
-            // initData: '',
             blockSearchInput: '',
             blockSearchSubmit: '',
-            // searchError: ''
         }
     },
     methods: {
