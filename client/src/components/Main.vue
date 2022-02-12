@@ -308,7 +308,7 @@ export default {
         },
         signatureFinished(){
             this.$refs.editDescriptionModalref.closeModal();
-            console.log(`${this.newDescription} has been signed and verified and finished by ${this.walletId}!!`)
+            console.log(`A message of "${this.newDescription}" has been officially signed, verified, and completed by ${this.walletId}!!`)
         },
         /*
                 ====================================================================================================
