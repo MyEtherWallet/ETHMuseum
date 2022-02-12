@@ -6,7 +6,7 @@
                         ====================================================================================================
                     -->
     <detail-modal-app ref="modalRef"/>
-    <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted"/>
+    <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted" @modalHasBeenClosed="modalHasBeenClosed"/>
                     <!--
                         ====================================================================================================
                             NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
@@ -17,7 +17,7 @@
         <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3"/>
         <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" />
     </div>
-    <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @finishSignature="finishSignature"/>
+    <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @signatureFinished="signatureFinished"/>
     <div id="main-content-container">
         <div class="left-of-main-box">
             <!--
@@ -306,9 +306,10 @@ export default {
             /* Below is for Metamask test only */
             // this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
         },
-        // finishSignature (){
-        //     console.log(`${this.newDescription} has been signed by ${this.walletId}`)
-        // },
+        signatureFinished(){
+            this.$refs.editDescriptionModalref.closeModal();
+            console.log(`${this.newDescription} has been signed and verified and finished by ${this.walletId}!!`)
+        },
         /*
                 ====================================================================================================
                 THIS METHOD PASSES IN PARAMETERS WE'D  PASSS THROUGH INTO THE NEW API LINK TO FETCH 

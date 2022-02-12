@@ -45,10 +45,10 @@ export default {
             this.submittedDescriptionText = this.editDescriptionInput;
             this.$emit('newDescriptionSubmitted', this.submittedDescriptionText)
             this.editDescriptionInput = ''
-            this.isEditModalActive = false;
         },
         closeModal() {
             this.isEditModalActive = false
+            this.$emit('modalHasBeenClosed')
         },
     }
 }
