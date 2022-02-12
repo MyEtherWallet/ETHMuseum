@@ -6,7 +6,7 @@
                         ====================================================================================================
                     -->
     <detail-modal-app ref="modalRef"/>
-    <edit-description-app ref="editDesctiptionModalref"/>
+    <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted"/>
                     <!--
                         ====================================================================================================
                             NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
@@ -17,7 +17,7 @@
         <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3"/>
         <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" />
     </div>
-    <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" />
+    <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @finishSignature="finishSignature"/>
     <div id="main-content-container">
         <div class="left-of-main-box">
             <!--
@@ -198,7 +198,9 @@ export default {
             searchedHash: false,
             connectingToWallet: false,
             walletId: '',
-            // walletId:"0x166af1addbf6f4e535ccb344a68d84ff36a59666",
+            newDescription: '',
+            /* Below is for metamask test only */
+            // metaMaskId :"0x1820DC8b3eb01e10D27BFF5a460010350f97598f",
         };
     },
     computed: {
@@ -227,6 +229,11 @@ export default {
         connectingToWalletModal() {
             return this.connectingToWallet;
         },
+        // computedDescription(){
+        //     if(this.newDescription !== '') {
+        //         return this.newDescription;
+        //     }
+        // },
     },
     watch: {
         /*
@@ -292,6 +299,16 @@ export default {
             this.walletId = ''
             this.connectingToWallet = false;
         },
+        newDescriptionSubmitted(newDescription) {
+            this.newDescription = newDescription;
+            this.$refs.web3Ref.signNewDescription(this.newDescription, this.walletId);
+            console.log(`${this.newDescription} was sent and edited from: ${this.walletId}`)
+            /* Below is for Metamask test only */
+            // this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
+        },
+        // finishSignature (){
+        //     console.log(`${this.newDescription} has been signed by ${this.walletId}`)
+        // },
         /*
                 ====================================================================================================
                 THIS METHOD PASSES IN PARAMETERS WE'D  PASSS THROUGH INTO THE NEW API LINK TO FETCH 
@@ -301,7 +318,6 @@ export default {
             return "https://ethblocksdata.mewapi.io/1/" + blockNumber + "/image.png";
         },
         intersected() {
-            // const querySize = this.pageIncrement + this.blockInfo.length
             axios
                 .get(
                     "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=" +
@@ -322,7 +338,7 @@ export default {
             this.$refs.modalRef.moreDetails(blockItemInfo);
         },
         openEditDescriptionModal(blockItemInfo) {
-            this.$refs.editDesctiptionModalref.editDescription(blockItemInfo)
+            this.$refs.editDescriptionModalref.editDescription(blockItemInfo)
         }
     },
 };

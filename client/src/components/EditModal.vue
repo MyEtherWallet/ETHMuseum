@@ -5,29 +5,47 @@
     <form v-if="isEditModalActive == true" action="submit">
         <div @click="closeModal" class='close-x'>&times;</div>
         <h1>Edit Description For: <span class='modal-block-number'> {{ blockItem.meta.name }} </span></h1>
-        <input :placeholder="blockItem.meta.description"/>
-        <button>Submit</button>
+
+        <input
+        :placeholder="blockItem.meta.description" 
+        v-model="editDescriptionInput"
+        @input="editAttempt"
+        />
+
+        <button @click="submitEdit">Submit</button>
     </form>
 </div>
 </template>
 
 <script>
-import Main from '@/components/Main.vue'
+// import Main from '@/components/Main.vue'
 
 export default {
     name: 'EditModal',
-    components:{Main},
     props: ['blockItemInfo'],
     data() {
         return {
             isEditModalActive: false,
             blockItem: null,
+            editDescriptionInput: '',
+            submittedDescriptionText: '',
         }
     },
     methods: {
         editDescription(blockItemInfo) {
             this.blockItem = blockItemInfo;
             this.isEditModalActive = true;
+        },
+        editAttempt(e) {
+            this.editDescriptionInput = e.target.value;
+            // console.log(this.editDescriptionInput)
+        },
+        submitEdit(e) {
+            e.preventDefault();
+            this.submittedDescriptionText = this.editDescriptionInput;
+            this.$emit('newDescriptionSubmitted', this.submittedDescriptionText)
+            this.editDescriptionInput = ''
+            this.isEditModalActive = false;
         },
         closeModal() {
             this.isEditModalActive = false
