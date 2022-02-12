@@ -21,10 +21,10 @@ export default {
             accounts: null,
             messageData: "",
             walletid: "",
+            signaureKey: ""
         }
     },
     mounted() {
-        // @ts-ignore
         this.getWeb3();
     },
     methods: {
@@ -46,7 +46,6 @@ export default {
                     package: Authereum, // required
                 },
             };
-            // console.log(providerOptions)
 
             const web3Modal = new Web3Modal({
                 network: "mainnet", // optional
@@ -54,11 +53,7 @@ export default {
                 providerOptions, // required
             });
 
-            // console.log('before provider')
             const provider = await web3Modal.connect();
-            // console.log(provider)
-            // console.log('provider made')
-
             const web3 = new Web3(provider);
             const accounts = await web3.eth.getAccounts();
 
@@ -70,19 +65,16 @@ export default {
             return web3;
         },
         async disConnect() {
-            // @ts-ignore
             await this.web3Modal.clearCachedProvider();
-            // @ts-ignore
             await this.provider.disconnect();
-            // @ts-ignore
             this.$emit("disconnectWallet");
         },
         async signNewDescription(data, address) {
             this.messageData = data;
             this.walletid = address;
             await this.web3.eth.personal.sign(this.messageData, this.walletid).then(console.log);
-            // await this.web3.eth.personal.ecRecover(this.messageData).then(this.walletid)
-            console.log(`A message of "${this.messageData}" from ${this.walletid} has been signed by current user`)
+            // await this.web3.eth.personal.ecRecover(this.messageData).then(console.log);
+            console.log(`A message of "${this.messageData}" from ${this.walletid} has been signed and verified by current user!`);
         }
     }
 };

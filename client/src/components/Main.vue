@@ -302,7 +302,7 @@ export default {
         newDescriptionSubmitted(newDescription) {
             this.newDescription = newDescription;
             this.$refs.web3Ref.signNewDescription(this.newDescription, this.walletId);
-            console.log(`${this.newDescription} was sent and edited from: ${this.walletId}`)
+            console.log(`A new submission to edit description of "${this.newDescription}" from: ${this.walletId} is awaiting verification!`)
             /* Below is for Metamask test only */
             // this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
         },
