@@ -75,7 +75,7 @@ export default {
             await this.web3.eth.personal.sign(this.messageData, this.walletid).then(console.log);
             // await this.web3.eth.personal.ecRecover(this.messageData).then(console.log);
             console.log(`A message of "${this.messageData}" from ${this.walletid} has been signed!`);
-            this.$emit('signatureFinished')
+            this.$emit('signatureFinished', this.messageData)
         }
     }
 };

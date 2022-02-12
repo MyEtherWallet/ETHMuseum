@@ -62,6 +62,15 @@
                         <p>Owned by: {{ block.owners[0] }}</p>
                     </div>
                     <div class="comment-container">
+                        <p v-if="descriptionToDisplay && block.owners[0] === walletId">
+                            {{ newSignedDescription }}
+                            <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
+                            <span 
+                                v-if="block.owners[0] === walletId" 
+                                class='edit-description-button' 
+                                @click="openEditDescriptionModal(blockItems[index])">edit
+                            </span>
+                        </p>
                         <p>
                             {{ block.meta.description }}
                             <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
@@ -199,6 +208,8 @@ export default {
             connectingToWallet: false,
             walletId: '',
             newDescription: '',
+            newSignedDescription: '',
+            descriptionToDisplay: false
             /* Below is for metamask test only */
             // metaMaskId :"0x1820DC8b3eb01e10D27BFF5a460010350f97598f",
         };
@@ -306,9 +317,11 @@ export default {
             /* Below is for Metamask test only */
             // this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
         },
-        signatureFinished(){
+        signatureFinished(description){
             this.$refs.editDescriptionModalref.closeModal();
-            console.log(`A message of "${this.newDescription}" has been officially signed, verified, and completed by ${this.walletId}!!`)
+            this.newSignedDescription = description;
+            this.descriptionToDisplay = true;
+            console.log(`A message of "${this.newSignedDescription}" has been officially signed, verified, and completed by ${this.walletId}!!`)
         },
         /*
                 ====================================================================================================
