@@ -180,7 +180,7 @@ button:hover {
     border: 6px solid #D7DAE3;
     border-radius: 50%;
     border-top: solid 5px #05C0A5;
-    animation: loading 1s infinite linear;
+    animation: loading 2s infinite linear;
 }
 .loadingSpan{
     width: 510px;
