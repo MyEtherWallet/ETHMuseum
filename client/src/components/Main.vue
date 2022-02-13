@@ -200,8 +200,8 @@ export default {
             newDescription: '',
             newSignedDescription: '',
             descriptionToDisplay: false,
-            /* Below is for metamask test only */
-            metaMaskId: "0x1820DC8b3eb01e10D27BFF5a460010350f97598f",
+            /* Below is for metamask test only please include a MM address to test */
+            // metaMaskId: "",
         };
     },
     computed: {
@@ -297,10 +297,10 @@ export default {
         },
         newDescriptionSubmitted(newDescription) {
             this.newDescription = newDescription;
-            // this.$refs.web3Ref.signNewDescription(this.newDescription, this.walletId);
+            this.$refs.web3Ref.signNewDescription(this.newDescription, this.walletId);
             console.log(`A new submission to edit description of "${this.newDescription}" from: ${this.walletId} is awaiting verification!`)
             /* Below is for Metamask test only */
-            this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
+            // this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
         },
         signatureFinished(description) {
             this.newSignedDescription = description;
@@ -309,10 +309,6 @@ export default {
             console.log(`A message of "${this.newSignedDescription}" has been officially signed, verified, and completed by ${this.walletId}!!`)
             
         },
-        // modalHasBeenClosed() {
-        //     this.$refs.editDescriptionModalref.closeModal();
-        //     console.log('modal closed')
-        // },
         /*
                 ====================================================================================================
                 THIS METHOD PASSES IN PARAMETERS WE'D  PASSS THROUGH INTO THE NEW API LINK TO FETCH 
@@ -347,6 +343,9 @@ export default {
     },
 };
 </script>
+
+
+
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
