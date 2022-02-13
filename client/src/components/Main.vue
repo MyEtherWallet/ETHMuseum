@@ -1,23 +1,23 @@
 <template>
 <div id="main-container">
-                <!--
+    <!--
                         ====================================================================================================
                                                                 RENDERED MODALS
                         ====================================================================================================
                     -->
-    <detail-modal-app ref="modalRef"/>
-    <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted" @modalHasBeenClosed="modalHasBeenClosed"/>
-                    <!--
+    <detail-modal-app ref="modalRef" />
+    <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted" @closeModalAfterVerification="closeModalAfterVerification"/>
+    <!--
                         ====================================================================================================
                             NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
                             DATA PROPERTY WITHIN PARENT COMPONENT TO USE VIA THIS.BLOCKSEARCH
                         ====================================================================================================
                     -->
     <div id="nav-container-hugger">
-        <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3"/>
+        <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3" />
         <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" />
     </div>
-    <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @signatureFinished="signatureFinished"/>
+    <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @signatureFinished="signatureFinished" />
     <div id="main-content-container">
         <div class="left-of-main-box">
             <!--
@@ -42,7 +42,7 @@
                         ====================================================================================================
                     -->
 
-            <div v-for="(block, index) in blockItems" v-else-if="!loading && searchedMultiple" :key="block" class="block-card" >
+            <div v-for="(block, index) in blockItems" v-else-if="!loading && searchedMultiple" :key="block" class="block-card">
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
@@ -65,19 +65,13 @@
                         <p v-if="descriptionToDisplay && block.owners[0] === walletId">
                             {{ newSignedDescription }}
                             <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
-                            <span 
-                                v-if="block.owners[0] === walletId" 
-                                class='edit-description-button' 
-                                @click="openEditDescriptionModal(blockItems[index])">edit
+                            <span v-if="block.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit
                             </span>
                         </p>
                         <p>
                             {{ block.meta.description }}
                             <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
-                            <span 
-                                v-if="block.owners[0] === walletId" 
-                                class='edit-description-button' 
-                                @click="openEditDescriptionModal(blockItems[index])">edit
+                            <span v-if="block.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit
                             </span>
                         </p>
                     </div>
@@ -120,14 +114,11 @@
                     </div>
                     <div class="comment-container">
                         <p>
-                            {{ blockInfo.meta.description }} 
+                            {{ blockInfo.meta.description }}
                         </p>
                     </div>
                     <div class="details-container">
-                        <span 
-                            v-if="blockInfo.owners[0] === walletId" 
-                            class='edit-description-button' 
-                            @click="openEditDescriptionModal(blockItems[index])">edit
+                        <span v-if="blockInfo.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit
                         </span>
                     </div>
                 </div>
@@ -137,7 +128,7 @@
                     THE AREA BELOW IS STRICTLY FOR THE INTERSECTION OBSERVER 
             ====================================================================================================
         -->
-            <trigger-app v-if="!loading && searchedMultiple" @intersect="intersected"  />
+            <trigger-app v-if="!loading && searchedMultiple" @intersect="intersected" />
             <p></p>
         </div>
         <!--
@@ -167,7 +158,7 @@
 </template>
 
 <script>
-/* eslint-disable */ 
+/* eslint-disable */
 import Web3 from "@/components/Web3.vue";
 import NavOne from "@/components/NavOne.vue";
 import NavTwo from "@/components/NavTwo.vue";
@@ -177,7 +168,6 @@ import BlockCardSkeleton from "@/components/BlockCardSkeleton.vue";
 import EditModal from '@/components/EditModal.vue';
 import DetailModal from '@/components/DetailModal.vue';
 import axios from "axios";
-
 
 export default {
     name: "Main",
@@ -209,9 +199,9 @@ export default {
             walletId: '',
             newDescription: '',
             newSignedDescription: '',
-            descriptionToDisplay: false
+            descriptionToDisplay: false,
             /* Below is for metamask test only */
-            // metaMaskId :"0x1820DC8b3eb01e10D27BFF5a460010350f97598f",
+            metaMaskId: "0x1820DC8b3eb01e10D27BFF5a460010350f97598f",
         };
     },
     computed: {
@@ -240,11 +230,6 @@ export default {
         connectingToWalletModal() {
             return this.connectingToWallet;
         },
-        // computedDescription(){
-        //     if(this.newDescription !== '') {
-        //         return this.newDescription;
-        //     }
-        // },
     },
     watch: {
         /*
@@ -312,17 +297,22 @@ export default {
         },
         newDescriptionSubmitted(newDescription) {
             this.newDescription = newDescription;
-            this.$refs.web3Ref.signNewDescription(this.newDescription, this.walletId);
+            // this.$refs.web3Ref.signNewDescription(this.newDescription, this.walletId);
             console.log(`A new submission to edit description of "${this.newDescription}" from: ${this.walletId} is awaiting verification!`)
             /* Below is for Metamask test only */
-            // this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
+            this.$refs.web3Ref.signNewDescription(this.newDescription, this.metaMaskId);
         },
-        signatureFinished(description){
-            this.$refs.editDescriptionModalref.closeModal();
+        signatureFinished(description) {
             this.newSignedDescription = description;
+            this.$refs.editDescriptionModalref.closeModalAfterVerification();
             this.descriptionToDisplay = true;
             console.log(`A message of "${this.newSignedDescription}" has been officially signed, verified, and completed by ${this.walletId}!!`)
+            
         },
+        // modalHasBeenClosed() {
+        //     this.$refs.editDescriptionModalref.closeModal();
+        //     console.log('modal closed')
+        // },
         /*
                 ====================================================================================================
                 THIS METHOD PASSES IN PARAMETERS WE'D  PASSS THROUGH INTO THE NEW API LINK TO FETCH 
@@ -503,17 +493,19 @@ h1,
 .comment-container {
     width: 100%;
     height: fit-content;
-    font-size:11px;
+    font-size: 11px;
     text-align: left;
 }
-.edit-description-button{
+
+.edit-description-button {
     font-weight: 800;
     font-size: 9px;
     cursor: pointer;
     margin-left: 5px;
-    color:#FF445B;
+    color: #FF445B;
 }
-.edit-description-button:hover{
+
+.edit-description-button:hover {
     color: #939FB9;
 
 }
@@ -573,7 +565,7 @@ h1,
     width: 90px;
     height: 90px;
     position: absolute;
-    top: 30%;
+    top: 32%;
     z-index: 2;
     animation: minticonmove 2s linear infinite;
 }
@@ -658,14 +650,14 @@ h1,
     height: 25%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
     align-items: center;
     border-radius: 10px;
     border: none;
     box-shadow: 0px 0px 10px rgba(233, 233, 233, 0.911);
     background-color: white;
     font-size: 13px;
-    padding: 15px;
+    padding: 18px;
     margin-top: 30%;
     z-index: 1;
 }

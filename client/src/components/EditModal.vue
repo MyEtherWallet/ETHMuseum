@@ -5,6 +5,7 @@
     <form v-if="isEditModalActive == true" action="submit">
         <div @click="closeModal" class='close-x'>&times;</div>
         <h1 v-if="isVerifying" class='loadingText'>Awaiting Verification...</h1>
+        <h1 v-if="isVerified" class='loadingTextSpan'>Verification Complete!</h1>
         <div v-if="isVerifying" class='loading'></div>
         <span v-if="isVerifying" class='loadingSpan'></span>
         <h1 v-if="hasNotVerified">Edit Description For: <span class='modal-block-number'> {{ blockItem.meta.name }} </span></h1>
@@ -27,8 +28,9 @@ export default {
             blockItem: null,
             editDescriptionInput: '',
             submittedDescriptionText: '',
+            hasNotVerified: false,
             isVerifying: false,
-            hasNotVerified: false
+            isVerified: false
         }
     },
     methods: {
@@ -50,10 +52,23 @@ export default {
             this.editDescriptionInput = ''
         },
         closeModal() {
-            this.isEditModalActive = false
+            this.hasNotVerified = true,
+            this.isEditModalActive = false,
             this.isVerifying = false
-            this.hasNotVerified = true;
-            this.$emit('modalHasBeenClosed')
+            this.isVerified = false;
+        },
+        closeModalAfterVerification() {
+            this.isVerified = true;
+            this.isVerifying = false;
+            setTimeout(() => {this.triggerVerifiedClose()},2000);
+        },
+        triggerVerifiedClose() {
+            this.isEditModalActive = false,
+            this.isVerified = false;
+            this.hasNotVerified = true,
+            this.isEditModalActive = false,
+            this.isVerifying = false
+            this.isVerified = false;
         },
     }
 }
@@ -169,8 +184,11 @@ button:hover {
     transition: 300ms ease-in-out;
     pointer-events: all;
 }
-.loadingText{
+.loadingText {
     height: 80px;
+}
+.loadingTextSpan{
+    width: 510px;
 }
 .loading {
     position: absolute;
@@ -182,7 +200,7 @@ button:hover {
     border-top: solid 5px #05C0A5;
     animation: loading 2s infinite linear;
 }
-.loadingSpan{
+.loadingSpan {
     width: 510px;
 }
 
