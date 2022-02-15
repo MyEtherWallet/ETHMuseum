@@ -133,6 +133,10 @@
                     </div>
                 </div>
             </div>
+                <blockCardSkeleton-app v-if="triggerLoading" class="skeleton-load" />
+                <blockCardSkeleton-app v-if="triggerLoading"  class="skeleton-load" />
+                <blockCardSkeleton-app v-if="triggerLoading"  class="skeleton-load" />
+
             <!--
             ====================================================================================================
                     THE AREA BELOW IS STRICTLY FOR THE INTERSECTION OBSERVER 
@@ -202,6 +206,7 @@ export default {
             pageIncrement: 10,
             errored: false,
             loading: true,
+            triggerLoading: false,
             blockPage: null,
             searchedMultiple: true,
             searchedUserBlock: true,
@@ -351,7 +356,7 @@ export default {
             return "https://ethblocksdata.mewapi.io/1/" + blockNumber + "/image.png";
         },
         intersected() {
-            this.loading = true;
+            this.triggerLoading = true;
             axios
                 .get(
                     "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=" +
@@ -366,7 +371,7 @@ export default {
                     console.log(error);
                     this.errored = true;
                 })
-                .finally(() => (this.loading = false));
+                .finally(() => (this.triggerLoading = false));
         },
         showMoreDetailModal(blockItemInfo) {
             this.$refs.modalRef.moreDetails(blockItemInfo);
