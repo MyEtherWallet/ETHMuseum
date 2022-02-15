@@ -1,13 +1,13 @@
 <template>
 <div id="main-container">
-    <!--
+                    <!--
                         ====================================================================================================
                                                                 RENDERED MODALS
                         ====================================================================================================
                     -->
     <detail-modal-app ref="modalRef" />
     <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted" @closeModalAfterVerification="closeModalAfterVerification" />
-    <!--
+                    <!--
                         ====================================================================================================
                             NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
                             DATA PROPERTY WITHIN PARENT COMPONENT TO USE VIA THIS.BLOCKSEARCH
@@ -31,7 +31,12 @@
                     moment, please try again later
                 </p>
             </section>
-            <div v-if="loading" class="loadMessage">
+            <section v-if="userSearchErrored">
+                <p class="noDataMessage">
+                    Sorry, looks like you don't own any blocks yet!
+                </p>
+            </section>
+            <div v-if="!errored && loading" class="loadMessage">
                 <blockCardSkeleton-app class="skeleton-load" />
                 <blockCardSkeleton-app class="skeleton-load" />
                 <blockCardSkeleton-app class="skeleton-load" />
@@ -46,7 +51,7 @@
                         ====================================================================================================
                     -->
 
-            <div v-for="(block, index) in blockItems" v-else-if="!loading && searchedMultiple" :key="block" class="block-card">
+            <div v-for="(block, index) in blockItems" v-else-if="!loading && !errored && searchedMultiple" :key="block" class="block-card">
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
@@ -91,7 +96,7 @@
                                                 SINGLE BLOCK SEARCH RENDER BASED ON BLOCK #
                         ====================================================================================================
                     -->
-            <div v-else-if="!loading && !searchedMultiple" class="block-card">
+            <div v-else-if="!loading && !errored && !searchedMultiple" class="block-card">
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
@@ -131,16 +136,16 @@
                     </div>
                 </div>
             </div>
-            <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
-            <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
-            <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
+            <blockCardSkeleton-app v-if="!errored && triggerLoading && searchedMultiple" class="skeleton-load" />
+            <blockCardSkeleton-app v-if="!errored && triggerLoading && searchedMultiple" class="skeleton-load" />
+            <blockCardSkeleton-app v-if="!errored && triggerLoading && searchedMultiple" class="skeleton-load" />
 
             <!--
             ====================================================================================================
                     THE AREA BELOW IS STRICTLY FOR THE INTERSECTION OBSERVER 
             ====================================================================================================
         -->
-            <trigger-app v-if="!loading && !userSearched && searchedMultiple" @intersect="intersected" />
+            <trigger-app v-if="!loading && !errored && !userSearched && searchedMultiple" @intersect="intersected" />
             <p></p>
         </div>
         <!--
@@ -204,6 +209,7 @@ export default {
             blockItems: [],
             pageIncrement: 10,
             errored: false,
+            userSearchErrored: false,
             loading: true,
             triggerLoading: false,
             blockPage: null,
@@ -295,7 +301,8 @@ export default {
     },
     methods: {
         renderHome() {
-            this.userSearched = false;
+            this.userSearched = false
+            this.userSearchErrored = false
             axios
                 .get(
                     "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10"
@@ -321,17 +328,22 @@ export default {
             this.userSearched = true;
             this.loading = true;
             const hash = /\b([0x]+[a-f0-9]{40})\b/;
-            if (hash.test(this.walletId)) {
+            if (hash.test(this.walletId.toLowerCase())) {
                 axios
                     .get("https://ethereum-api.rarible.org/v0.1/nft/items/byOwner?owner=" + this.walletId)
                     .then(response => {
-                        this.blockItems = response.data.items
-                        console.log('THIS IS YOUR USER BLOCKS')
-                        console.log(this.blockItems)
+                        if(response.data.total == 0) {
+                            this.userSearchErrored = true
+                            console.log('USER HAS NO BLOCKS')
+
+                        } else {
+                            this.blockItems = response.data.items
+                            console.log('THIS IS YOUR USER BLOCKS')
+                            console.log(this.blockItems)
+                        }
                     })
                     .catch((error) => {
                         console.log(error);
-                        this.errored = true;
                     })
                     .finally(() => (this.loading = false));
             }
