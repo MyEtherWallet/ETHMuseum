@@ -314,8 +314,8 @@ export default {
             console.log('attempting to connect...')
             this.walletId = newaccount;
             // this.walletId = "0xf38b740359d0a7ee22580c91e10083bb1a4988c7"
-            this.$refs.navTwoBar.showUserNav();
             console.log(`User ${this.walletId} has successfully signed on!`)
+            this.$refs.navTwoBar.showUserNav();
         },
         findUserBlocks() {
             this.userSearched = true;

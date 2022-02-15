@@ -74,7 +74,6 @@ export default {
             this.userLoggedIn = false
         },
         findUserBlocks() {
-            // e.preventDefault();
             this.$emit('findUserBlocks')
         }
     }
