@@ -10,7 +10,11 @@
             <input v-model="blockSearchInput" type="text" placeholder="Block # or hash.." @input="searchAttempt" />
             <button @click="submitSearch">Search Block</button>
         </div>
+        <p v-if="errored" class="searchError">
+            Not enough characters to perform search!
+        </p>
     </div>
+
     <div v-if="userLoggedIn" class='left-of-nav'>
         <a @click="goHome">Home</a>
         <a @click="findUserBlocks">All my blocks</a>
@@ -20,6 +24,9 @@
             <input v-model="blockSearchInput" type="text" placeholder="Block # or hash.." @input="searchAttempt" />
             <button @click="submitSearch">Search Block</button>
         </div>
+        <p v-if="errored" class="searchError">
+            Not enough characters to perform search!
+        </p>
     </div>
     <div class='right-of-nav'>
     </div>
@@ -37,11 +44,12 @@ export default {
         return {
             blockSearchInput: '',
             blockSearchSubmit: '',
-            userLoggedIn: false
+            userLoggedIn: false,
+            errored: false,
         }
     },
     methods: {
-        goHome(){
+        goHome() {
             this.$emit('renderHome')
         },
         searchAttempt(e) {
@@ -50,8 +58,14 @@ export default {
         submitSearch(e) {
             e.preventDefault();
             this.blockSearchSubmit = this.blockSearchInput;
-            this.$emit('blockWasSearched', this.blockSearchInput);
-            this.blockSearchInput = '';
+            if (this.blockSearchSubmit <= 2) {
+                this.errored = true;
+                this.blockSearchInput = '';
+            } else {
+                this.$emit('blockWasSearched', this.blockSearchInput);
+                this.errored = false;
+                this.blockSearchInput = '';
+            }
         },
         showUserNav() {
             this.userLoggedIn = true;
@@ -59,7 +73,7 @@ export default {
         showHomeNav() {
             this.userLoggedIn = false
         },
-        findUserBlocks(){
+        findUserBlocks() {
             // e.preventDefault();
             this.$emit('findUserBlocks')
         }
@@ -116,6 +130,13 @@ body,
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+}
+
+.searchError {
+    position: absolute;
+    color: rgb(122, 21, 21);
+    font-size: 10px;
+    right: 25%;
 }
 
 input {
