@@ -6,7 +6,7 @@
                         ====================================================================================================
                     -->
     <detail-modal-app ref="modalRef" />
-    <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted" @closeModalAfterVerification="closeModalAfterVerification"/>
+    <edit-description-app ref="editDescriptionModalref" @newDescriptionSubmitted="newDescriptionSubmitted" @closeModalAfterVerification="closeModalAfterVerification" />
     <!--
                         ====================================================================================================
                             NAVIGATION BAR SECTION THAT PASSES PROPS BY AN EMITTED EVENT FROM CHILD COMPONENT AND SET AS A 
@@ -15,7 +15,7 @@
                     -->
     <div id="nav-container-hugger">
         <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3" />
-        <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" />
+        <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" @showHomeNav="showHomeNav" @showUserNav="showUserNav" @findUserBlocks="findUserBlocks" />
     </div>
     <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @signatureFinished="signatureFinished" />
     <div id="main-content-container">
@@ -35,10 +35,14 @@
                 <blockCardSkeleton-app class="skeleton-load" />
                 <blockCardSkeleton-app class="skeleton-load" />
                 <blockCardSkeleton-app class="skeleton-load" />
+                <blockCardSkeleton-app class="skeleton-load" />
+                <blockCardSkeleton-app class="skeleton-load" />
             </div>
             <!--
                         ====================================================================================================
-                            RUNS AN IF CHECK IF NOT LOADING AND IS TRUE RENDER BELOW ELSE... 
+                                                    MULTIPLE BLOCK SEARCH RENDER GENERAL
+                                                    MULTIPLE BLOCK SEARCH RENDER GENERAL
+                                                    MULTIPLE BLOCK SEARCH RENDER GENERAL
                         ====================================================================================================
                     -->
 
@@ -46,7 +50,8 @@
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
-                        <img class="block-pic" :src="getImgUrl(block.meta.attributes[0].value)" />
+                        <!-- <img class="block-pic" :src="getImgUrl(block.tokenId)" /> -->
+                        <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${block.tokenId}/image.png`' />
                     </div>
                     <div class="mint-date">
                         <p>Minted: {{ block.meta.attributes[2].value }}</p>
@@ -75,12 +80,6 @@
                             </span>
                         </p>
                     </div>
-                    <!--
-                        ====================================================================================================
-                                                                MORE DETAILS CONTAINER
-                        ====================================================================================================
-                    -->
-
                     <div class="details-container">
                         <h1 @click="showMoreDetailModal(blockItems[index])">More Info</h1>
                     </div>
@@ -88,16 +87,17 @@
             </div>
             <!--
                         ====================================================================================================
-                        IF IT'S NOT LOADING AND ALSO IS FALSE MEANING THE USER IS SEARCHING FOR "ONE" 
-                        PARTICULAR BLOCK# OR HASH, IT WILL RENDER BELOW 
+                                                SINGLE BLOCK SEARCH RENDER BASED ON BLOCK #
+                                                SINGLE BLOCK SEARCH RENDER BASED ON BLOCK #
+                                                SINGLE BLOCK SEARCH RENDER BASED ON BLOCK #
                         ====================================================================================================
                     -->
-            <!-- <div v-else-if="!loading && !searchedMultiple && blockInfo.owners[0] == walletId" class="block-card"> -->
             <div v-else-if="!loading && !searchedMultiple" class="block-card">
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
-                        <img class="block-pic" :src="getImgUrl(blockInfo.meta.attributes[0].value)" />
+                        <!-- <img class="block-pic" :src="getImgUrl(blockInfo.tokenId)" /> -->
+                        <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${blockInfo.tokenId}/image.png`' />
                     </div>
                     <div class="mint-date">
                         <p>Minted: {{ blockInfo.meta.attributes[2].value }}</p>
@@ -112,14 +112,24 @@
                     <div class="card-owner-title">
                         <p>Owned by: {{ blockInfo.owners[0] }}</p>
                     </div>
+
                     <div class="comment-container">
+                        <p v-if="descriptionToDisplay && blockInfo.owners[0] === walletId">
+                            {{ newSignedDescription }}
+                            <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
+                            <span v-if="blockInfo.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockInfo)">edit
+                            </span>
+                        </p>
                         <p>
                             {{ blockInfo.meta.description }}
+                            <!-- <span class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit</span> -->
+                            <span v-if="blockInfo.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockInfo)">edit
+                            </span>
                         </p>
                     </div>
+
                     <div class="details-container">
-                        <span v-if="blockInfo.owners[0] === walletId" class='edit-description-button' @click="openEditDescriptionModal(blockItems[index])">edit
-                        </span>
+                        <h1 @click="showMoreDetailModal(blockInfo)">More Info</h1>
                     </div>
                 </div>
             </div>
@@ -194,6 +204,7 @@ export default {
             loading: true,
             blockPage: null,
             searchedMultiple: true,
+            searchedUserBlock: true,
             searchedHash: false,
             connectingToWallet: false,
             walletId: '',
@@ -216,9 +227,11 @@ export default {
             if (this.blockSearch == "") {
                 return "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10";
             } else if (hash.test(this.blockSearch)) {
+                console.log('THIS IS THE BLOCKS SEARCH')
+                console.log(this.blockSearch)
                 return (
                     "https://ethereum-api.rarible.org/v0.1/nft/items/byOwner?owner=" +
-                    this.blockSearch
+                    this.blockSearch.trim()
                 );
             } else {
                 return (
@@ -230,14 +243,15 @@ export default {
         connectingToWalletModal() {
             return this.connectingToWallet;
         },
+        // userSearched() {
+        //     if(this.blockSearch == '') {
+        //         return false
+        //     } else {
+        //         return true
+        //     }
+        // }
     },
     watch: {
-        /*
-                ====================================================================================================
-                THIS WATCH PROPERTY WILL PASS IN DATA VIA NEWVAL THAT BECOMES THE WHAT WE GRAB THEN RUNS THE API CALL
-                ONCE THAT PARAMETER IS PASSED, THEN SETS THE SEARCH MUTLIPLE STATE TO TRUE, WHICH THEN RENDERS THE PROPER BLOCK CARD
-                ====================================================================================================
-             */
         blockSearchLink(newVal) {
             this.loading = true;
             this.errored = false;
@@ -245,12 +259,16 @@ export default {
                 .get(newVal)
                 .then((response) => {
                     if (response.data.items) {
-                        this.blockInfo = response.data.items;
-                        this.searchedMultiple = true;
+                        this.blockItems = response.data.items
+                        this.searchedMultiple = true
+                        this.searchedUserBlock = true
+                        console.log('THIS IS YOUR BLOCK ITEMS FOR MORE THAN ONE BLOCK SEARCH RESULT')
+                        console.log(response.data.items)
                     } else {
-                        this.blockInfo = response.data;
-                        this.searchedMultiple = false;
-                        // this.searchedHash = true
+                        this.blockInfo = response.data
+                        this.searchedMultiple = false
+                        console.log('THIS IS YOUR BLOCKINFO FOR A SINGLE BLOCK SEARCH RESULT')
+                        console.log(response.data)
                     }
                     this.errored = false;
                 })
@@ -262,17 +280,13 @@ export default {
         },
     },
     mounted() {
-        /*
-                ====================================================================================================
-                                    ON RENDER WE WANT TO RENDER "10" BLOCKS FOR NOW
-                ====================================================================================================
-             */
         axios
             .get(
                 "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10"
             )
             .then((response) => {
-                this.blockInfo = response.data.items;
+                this.blockItems = response.data.items;
+                this.pageIncrement += 10
             })
             .catch((error) => {
                 console.log(error);
@@ -284,11 +298,31 @@ export default {
         accountsChanged(newaccount) {
             console.log('attempting to connect...')
             // this.walletId = newaccount;
-            this.walletId = "0x4989e1ab5e7cd00746b3938ef0f0d064a2025ba5"
+            this.walletId = "0xf38b740359d0a7ee22580c91e10083bb1a4988c7"
+            this.$refs.navTwoBar.showUserNav();
             console.log(`User ${this.walletId} has successfully signed on!`)
+        },
+        findUserBlocks() {
+            this.loading = true;
+            const hash = /\b([0x]+[a-f0-9]{40})\b/;
+            if (hash.test(this.walletId)) {
+                axios
+                    .get("https://ethereum-api.rarible.org/v0.1/nft/items/byOwner?owner=" + this.walletId)
+                    .then(response => {
+                        this.blockItems = response.data.items
+                        console.log('THIS IS YOUR USER BLOCKS')
+                        console.log(this.blockItems)
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.errored = true;
+                    })
+                    .finally(() => (this.loading = false));
+            }
         },
         disconnectWeb3() {
             this.$refs.web3Ref.disConnect();
+            this.$refs.navTwoBar.showHomeNav();
         },
         disconnectWallet() {
             console.log(`Current user ${this.walletId} has completely signed out!`)
@@ -307,7 +341,6 @@ export default {
             this.$refs.editDescriptionModalref.closeModalAfterVerification();
             this.descriptionToDisplay = true;
             console.log(`A message of "${this.newSignedDescription}" has been officially signed, verified, and completed by ${this.walletId}!!`)
-            
         },
         /*
                 ====================================================================================================
@@ -318,6 +351,7 @@ export default {
             return "https://ethblocksdata.mewapi.io/1/" + blockNumber + "/image.png";
         },
         intersected() {
+            this.loading = true;
             axios
                 .get(
                     "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=" +
@@ -325,8 +359,8 @@ export default {
                 )
                 .then((response) => {
                     this.blockList = response.data.items;
-                    this.blockItems = [...this.blockItems, ...this.blockList];
-                    console.log(this.blockItems);
+                    this.blockItems = [...this.blockList];
+                    this.pageIncrement += 10
                 })
                 .catch((error) => {
                     console.log(error);
@@ -343,9 +377,6 @@ export default {
     },
 };
 </script>
-
-
-
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
@@ -646,7 +677,7 @@ h1,
 
 .mint-box {
     width: 60%;
-    height: 25%;
+    height: 30%;
     display: flex;
     flex-direction: column;
     /* justify-content: flex-start; */

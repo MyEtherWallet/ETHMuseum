@@ -1,11 +1,21 @@
 <template>
 <div id='nav-container'>
-    <div class='left-of-nav'>
+    <Main />
+    <div v-if="userLoggedIn == false" class='left-of-nav'>
         <a href="#">All minted blocks</a>
         <a href="#">Blocks with comments</a>
         <a href="#">Most liked</a>
         <div>
-            <input v-model="blockSearchInput" type="text" placeholder="Block # or hash.." @input="searchAttempt"  />
+            <input v-model="blockSearchInput" type="text" placeholder="Block # or hash.." @input="searchAttempt" />
+            <button @click="submitSearch">Search Block</button>
+        </div>
+    </div>
+    <div v-if="userLoggedIn" class='left-of-nav'>
+        <a @click="findUserBlocks">All my blocks</a>
+        <a href="#">Blocks with comments</a>
+        <a href="#">Most liked</a>
+        <div>
+            <input v-model="blockSearchInput" type="text" placeholder="Block # or hash.." @input="searchAttempt" />
             <button @click="submitSearch">Search Block</button>
         </div>
     </div>
@@ -14,14 +24,18 @@
 </div>
 </template>
 
-
 <script>
+import Main from '@/components/Main.vue'
 export default {
     name: 'NavOne',
+    components: {
+        Main
+    },
     data() {
         return {
             blockSearchInput: '',
             blockSearchSubmit: '',
+            userLoggedIn: false
         }
     },
     methods: {
@@ -33,6 +47,16 @@ export default {
             this.blockSearchSubmit = this.blockSearchInput;
             this.$emit('blockWasSearched', this.blockSearchInput);
             this.blockSearchInput = '';
+        },
+        showUserNav() {
+            this.userLoggedIn = true;
+        },
+        showHomeNav() {
+            this.userLoggedIn = false
+        },
+        findUserBlocks(){
+            // e.preventDefault();
+            this.$emit('findUserBlocks')
         }
     }
 };
