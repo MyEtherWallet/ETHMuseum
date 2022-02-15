@@ -2,6 +2,7 @@
 <div id='nav-container'>
     <Main />
     <div v-if="userLoggedIn == false" class='left-of-nav'>
+        <a href="#">Home</a>
         <a href="#">All minted blocks</a>
         <a href="#">Blocks with comments</a>
         <a href="#">Most liked</a>
@@ -11,6 +12,7 @@
         </div>
     </div>
     <div v-if="userLoggedIn" class='left-of-nav'>
+        <a href="#">Home</a>
         <a @click="findUserBlocks">All my blocks</a>
         <a href="#">Blocks with comments</a>
         <a href="#">Most liked</a>
@@ -84,13 +86,13 @@ body,
 }
 
 .left-of-nav {
-    width: 50%;
+    width: 55%;
     height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    padding: 7.2%;
+    padding: 7.5%;
 }
 
 .left-of-nav a {

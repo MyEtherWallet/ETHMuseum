@@ -50,11 +50,11 @@
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
-                        <!-- <img class="block-pic" :src="getImgUrl(block.tokenId)" /> -->
-                        <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${block.tokenId}/image.png`' />
+                        <img class="block-pic" :src="getImgUrl(block.tokenId)" />
+                        <!-- <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${block.tokenId}/image.png`' /> -->
                     </div>
                     <div class="mint-date">
-                        <p>Minted: {{ block.meta.attributes[2].value }}</p>
+                        <p>Minted: {{ block.meta.attributes[2]?.value }}</p>
                     </div>
                 </div>
                 <div class="right-of-blockcard">
@@ -96,11 +96,11 @@
                 <img class="paint" src="../assets/images/layered-peaks-haikei.svg" />
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
-                        <!-- <img class="block-pic" :src="getImgUrl(blockInfo.tokenId)" /> -->
-                        <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${blockInfo.tokenId}/image.png`' />
+                        <img class="block-pic" :src="getImgUrl(blockInfo.tokenId)" />
+                        <!-- <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${blockInfo.tokenId}/image.png`' /> -->
                     </div>
                     <div class="mint-date">
-                        <p>Minted: {{ blockInfo.meta.attributes[2].value }}</p>
+                        <p>Minted: {{ blockInfo.meta.attributes[2]?.value }}</p>
                     </div>
                 </div>
                 <div class="right-of-blockcard">
@@ -133,16 +133,16 @@
                     </div>
                 </div>
             </div>
-                <blockCardSkeleton-app v-if="triggerLoading" class="skeleton-load" />
-                <blockCardSkeleton-app v-if="triggerLoading"  class="skeleton-load" />
-                <blockCardSkeleton-app v-if="triggerLoading"  class="skeleton-load" />
+                <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
+                <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
+                <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
 
             <!--
             ====================================================================================================
                     THE AREA BELOW IS STRICTLY FOR THE INTERSECTION OBSERVER 
             ====================================================================================================
         -->
-            <trigger-app v-if="!loading && searchedMultiple" @intersect="intersected" />
+            <trigger-app v-if="!loading && !userSearched && searchedMultiple" @intersect="intersected" />
             <p></p>
         </div>
         <!--
@@ -200,6 +200,7 @@ export default {
     data() {
         return {
             blockSearch: "",
+            userSearched: false,
             blockInfo: [],
             blockList: [],
             blockItems: [],
@@ -230,6 +231,7 @@ export default {
         blockSearchLink() {
             const hash = /\b([0x]+[a-f0-9]{40})\b/;
             if (this.blockSearch == "") {
+                this.userSearched = false;
                 return "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10";
             } else if (hash.test(this.blockSearch)) {
                 console.log('THIS IS THE BLOCKS SEARCH')
@@ -248,25 +250,18 @@ export default {
         connectingToWalletModal() {
             return this.connectingToWallet;
         },
-        // userSearched() {
-        //     if(this.blockSearch == '') {
-        //         return false
-        //     } else {
-        //         return true
-        //     }
-        // }
     },
     watch: {
         blockSearchLink(newVal) {
             this.loading = true;
             this.errored = false;
+            this.userSearched = true;
             axios
                 .get(newVal)
                 .then((response) => {
                     if (response.data.items) {
                         this.blockItems = response.data.items
                         this.searchedMultiple = true
-                        this.searchedUserBlock = true
                         console.log('THIS IS YOUR BLOCK ITEMS FOR MORE THAN ONE BLOCK SEARCH RESULT')
                         console.log(response.data.items)
                     } else {
@@ -285,6 +280,7 @@ export default {
         },
     },
     mounted() {
+        this.userSearched = false;
         axios
             .get(
                 "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10"
@@ -302,12 +298,13 @@ export default {
     methods: {
         accountsChanged(newaccount) {
             console.log('attempting to connect...')
-            // this.walletId = newaccount;
-            this.walletId = "0xf38b740359d0a7ee22580c91e10083bb1a4988c7"
+            this.walletId = newaccount;
+            // this.walletId = "0xf38b740359d0a7ee22580c91e10083bb1a4988c7"
             this.$refs.navTwoBar.showUserNav();
             console.log(`User ${this.walletId} has successfully signed on!`)
         },
         findUserBlocks() {
+            this.userSearched = true;
             this.loading = true;
             const hash = /\b([0x]+[a-f0-9]{40})\b/;
             if (hash.test(this.walletId)) {
@@ -356,6 +353,7 @@ export default {
             return "https://ethblocksdata.mewapi.io/1/" + blockNumber + "/image.png";
         },
         intersected() {
+            this.userSearched = false;
             this.triggerLoading = true;
             axios
                 .get(
