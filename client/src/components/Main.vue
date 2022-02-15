@@ -15,7 +15,7 @@
                     -->
     <div id="nav-container-hugger">
         <navOneApp :wallet-id="walletId" @connectWallet="connectingToWallet = $event" @disconnectWeb3="disconnectWeb3" />
-        <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" @showHomeNav="showHomeNav" @showUserNav="showUserNav" @findUserBlocks="findUserBlocks" />
+        <navTwoApp ref="navTwoBar" class="nav-two" @blockWasSearched="blockSearch = $event" @showHomeNav="showHomeNav" @showUserNav="showUserNav" @findUserBlocks="findUserBlocks" @renderHome="renderHome" />
     </div>
     <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @signatureFinished="signatureFinished" />
     <div id="main-content-container">
@@ -51,7 +51,6 @@
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
                         <img class="block-pic" :src="getImgUrl(block.tokenId)" />
-                        <!-- <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${block.tokenId}/image.png`' /> -->
                     </div>
                     <div class="mint-date">
                         <p>Minted: {{ block.meta.attributes[2]?.value }}</p>
@@ -97,7 +96,6 @@
                 <div class="left-of-blockcard">
                     <div class="block-pic-hugger">
                         <img class="block-pic" :src="getImgUrl(blockInfo.tokenId)" />
-                        <!-- <img class="block-pic" :src='`https://ethblocksdata.mewapi.io/1/${blockInfo.tokenId}/image.png`' /> -->
                     </div>
                     <div class="mint-date">
                         <p>Minted: {{ blockInfo.meta.attributes[2]?.value }}</p>
@@ -133,9 +131,9 @@
                     </div>
                 </div>
             </div>
-                <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
-                <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
-                <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
+            <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
+            <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
+            <blockCardSkeleton-app v-if="triggerLoading && searchedMultiple" class="skeleton-load" />
 
             <!--
             ====================================================================================================
@@ -296,6 +294,22 @@ export default {
             .finally(() => (this.loading = false));
     },
     methods: {
+        renderHome() {
+            this.userSearched = false;
+            axios
+                .get(
+                    "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10"
+                )
+                .then((response) => {
+                    this.blockItems = response.data.items;
+                    this.pageIncrement += 10
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.errored = true;
+                })
+                .finally(() => (this.loading = false));
+        },
         accountsChanged(newaccount) {
             console.log('attempting to connect...')
             this.walletId = newaccount;

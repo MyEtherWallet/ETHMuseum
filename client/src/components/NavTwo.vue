@@ -2,7 +2,7 @@
 <div id='nav-container'>
     <Main />
     <div v-if="userLoggedIn == false" class='left-of-nav'>
-        <a href="#">Home</a>
+        <a @click="goHome">Home</a>
         <a href="#">All minted blocks</a>
         <a href="#">Blocks with comments</a>
         <a href="#">Most liked</a>
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div v-if="userLoggedIn" class='left-of-nav'>
-        <a href="#">Home</a>
+        <a @click="goHome">Home</a>
         <a @click="findUserBlocks">All my blocks</a>
         <a href="#">Blocks with comments</a>
         <a href="#">Most liked</a>
@@ -41,6 +41,9 @@ export default {
         }
     },
     methods: {
+        goHome(){
+            this.$emit('renderHome')
+        },
         searchAttempt(e) {
             this.blockSearchInput = e.target.value;
         },
