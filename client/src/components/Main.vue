@@ -20,7 +20,7 @@
     <web3-app v-if="connectingToWalletModal" ref='web3Ref' @accountsChanged="accountsChanged" @disconnectWallet="disconnectWallet" @signatureFinished="signatureFinished" />
     <div id="main-content-container">
         <div class="left-of-main-box">
-            <!--
+                    <!--
                         ====================================================================================================
                                             BLOCK CARD SEARCH CONDITIONAL RENDERING BEGINS
                         ====================================================================================================
@@ -226,12 +226,6 @@ export default {
         };
     },
     computed: {
-        /*
-                ====================================================================================================
-                THIS COMPUTED PROPERTY WILL SET A VARIABLE THAT WILL BE ON THE LOOK OUT FOR THE PROP BEING PASSED
-                IN FROM CHILD COMPONENT AND RUN A CONDITIONAL AND EXECUTE BASED ON WHAT THE SEARCH CRITERIA WAS.
-                ====================================================================================================
-             */
         blockSearchLink() {
             const hash = /\b([0x]+[a-f0-9]{40})\b/;
             if (this.blockSearch == "") {
@@ -298,6 +292,7 @@ export default {
     },
     methods: {
         renderHome() {
+            this.userSearched = false
             this.loading = true
             this.searchedMultiple = true
             axios
@@ -353,6 +348,7 @@ export default {
         disconnectWallet() {
             console.log(`Current user ${this.walletId} has completely signed out!`)
             this.walletId = ''
+            this.renderHome();
             this.connectingToWallet = false;
         },
         newDescriptionSubmitted(newDescription) {
