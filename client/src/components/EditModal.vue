@@ -1,18 +1,19 @@
 <template>
 <div>
     <Main @blockItemInfo="blockItem" />
-    <div v-if="isEditModalActive == true" class='modal-background' @click="closeModal"></div>
-    <form v-if="isEditModalActive == true" action="submit">
-        <div @click="closeModal" class='close-x'>&times;</div>
-        <h1 v-if="isVerifying" class='loadingText'>Awaiting Verification...</h1>
-        <h1 v-if="isVerified" class='loadingTextSpan'>Verification Complete!</h1>
-        <div v-if="isVerifying" class='loading'></div>
-        <span v-if="isVerifying" class='loadingSpan'></span>
-        <h1 v-if="hasNotVerified">Edit Description For: <span class='modal-block-number'> {{ blockItem.meta.name }} </span></h1>
-        <input v-if="hasNotVerified" :placeholder="blockItem.meta.description" v-model="editDescriptionInput" @input="editAttempt" />
-
-        <button v-if="hasNotVerified" @click="submitEdit">Submit</button>
-    </form>
+        <div v-if="isEditModalActive == true" class='modal-background' @click="closeModal"></div>
+    <transition name="modal-fade">
+        <form v-if="isEditModalActive == true" action="submit">
+            <div @click="closeModal" class='close-x'>&times;</div>
+            <h1 v-if="isVerifying" class='loadingText'>Awaiting Verification...</h1>
+            <h1 v-if="isVerified" class='loadingTextSpan'>Verification Complete!</h1>
+            <div v-if="isVerifying" class='loading'></div>
+            <span v-if="isVerifying" class='loadingSpan'></span>
+            <h1 v-if="hasNotVerified">Edit Description For: <span class='modal-block-number'> {{ blockItem.meta.name }} </span></h1>
+            <input v-if="hasNotVerified" :placeholder="blockItem.meta.description" v-model="editDescriptionInput" @input="editAttempt" />
+            <button v-if="hasNotVerified" @click="submitEdit">Submit</button>
+        </form>
+    </transition>
 </div>
 </template>
 
@@ -53,21 +54,23 @@ export default {
         },
         closeModal() {
             this.hasNotVerified = true,
-            this.isEditModalActive = false,
-            this.isVerifying = false
+                this.isEditModalActive = false,
+                this.isVerifying = false
             this.isVerified = false;
         },
         closeModalAfterVerification() {
             this.isVerified = true;
             this.isVerifying = false;
-            setTimeout(() => {this.triggerVerifiedClose()},2000);
+            setTimeout(() => {
+                this.triggerVerifiedClose()
+            }, 2000);
         },
         triggerVerifiedClose() {
             this.isEditModalActive = false,
-            this.isVerified = false;
+                this.isVerified = false;
             this.hasNotVerified = true,
-            this.isEditModalActive = false,
-            this.isVerifying = false
+                this.isEditModalActive = false,
+                this.isVerifying = false
             this.isVerified = false;
         },
     }
@@ -84,6 +87,17 @@ h1,
     font-family: 'Roboto';
 }
 
+.modal-fade-enter,
+.modal-fade-leave-to {
+/* opacity: 0; */
+transform: translate(0%, 0%) scale(1);
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+transform: translate(0%, 0%) scale(0);
+}
+
 p {
     font-size: 14px;
     color: #939fb9;
@@ -93,10 +107,9 @@ form {
     position: fixed;
     max-width: 80%;
     height: 180px;
-    top: 50%;
-    left: 50%;
+    top: 30%;
+    left: 30%;
     padding: 20px 20px;
-    transform: translate(-50%, -50%) scale(1);
     border: 0.5px solid rgba(175, 175, 175, 0.115);
     border-radius: 20px;
     box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.32);
@@ -184,12 +197,15 @@ button:hover {
     transition: 300ms ease-in-out;
     pointer-events: all;
 }
+
 .loadingText {
     height: 80px;
 }
-.loadingTextSpan{
+
+.loadingTextSpan {
     width: 510px;
 }
+
 .loading {
     position: absolute;
     width: 50px;
@@ -200,6 +216,7 @@ button:hover {
     border-top: solid 5px #05C0A5;
     animation: loading 2s infinite linear;
 }
+
 .loadingSpan {
     width: 510px;
 }

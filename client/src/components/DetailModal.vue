@@ -3,18 +3,20 @@
     <Main @blockItemInfo="blockItem" />
 
     <div v-if="isModalActive == true" class='modal-background' @click="closeModal"></div>
-    <div v-if="isModalActive == true" class='moreDetail-pop-up-modal'>
-        <h2>
-            {{ blockItem.meta.name }}
-        </h2>
-        <p>Owned by: {{ blockItem.owners[0] }}</p>
-        <div class="block-pic-hugger">
-            <img class="block-pic" :src="getImgUrl(blockItem.meta.attributes[0].value)" />
+    <transition name="modal-fade">
+        <div v-if="isModalActive == true" class='moreDetail-pop-up-modal'>
+            <h2>
+                {{ blockItem.meta.name }}
+            </h2>
+            <p>Owned by: {{ blockItem.owners[0] }}</p>
+            <div class="block-pic-hugger">
+                <img class="block-pic" :src="getImgUrl(blockItem.meta.attributes[0].value)" />
+            </div>
+            <p>{{ blockItem.meta.attributes[0].value }} transactions</p>
+            <p>{{ blockItem.meta.attributes[1].value }} gas</p>
+            <p>{{ blockItem.meta.attributes[2].value }} uncles</p>
         </div>
-        <p>{{ blockItem.meta.attributes[0].value }} transactions</p>
-        <p>{{ blockItem.meta.attributes[1].value }} gas</p>
-        <p>{{ blockItem.meta.attributes[2].value }} uncles</p>
-    </div>
+    </transition>
 </div>
 </template>
 
@@ -59,6 +61,17 @@ h1,
     font-family: 'Roboto';
 }
 
+.modal-fade-enter,
+.modal-fade-leave-to {
+    /* opacity: 0; */
+    transform: translate(0%, 0%) scale(1);
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+    transform: translate(0%, 0%) scale(0);
+}
+
 p {
     font-size: 14px;
     color: #939fb9;
@@ -86,10 +99,9 @@ img {
     position: fixed;
     max-width: 80%;
     height: 500px;
-    top: 50%;
-    left: 50%;
+    top: 15%;
+    left: 30%;
     padding: 30px 50px;
-    transform: translate(-50%, -50%) scale(1);
     border: 0.5px solid rgba(175, 175, 175, 0.115);
     border-radius: 20px;
     box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.32);
