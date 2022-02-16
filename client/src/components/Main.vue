@@ -238,11 +238,9 @@ export default {
                 this.userSearched = false;
                 return "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10";
             } else if (hash.test(this.blockSearch)) {
-                console.log('THIS IS THE BLOCKS SEARCH')
-                console.log(this.blockSearch)
                 return (
                     "https://ethereum-api.rarible.org/v0.1/nft/items/byOwner?owner=" +
-                    this.blockSearch.trim()
+                    this.blockSearch
                 );
             } else {
                 return (
@@ -258,7 +256,6 @@ export default {
     watch: {
         blockSearchLink(newVal) {
             this.loading = true;
-            this.errored = false;
             this.userSearched = true;
             axios
                 .get(newVal)
@@ -266,13 +263,13 @@ export default {
                     if (response.data.items) {
                         this.blockItems = response.data.items
                         this.searchedMultiple = true
-                        console.log('THIS IS YOUR BLOCK ITEMS FOR MORE THAN ONE BLOCK SEARCH RESULT')
-                        console.log(response.data.items)
+                        // console.log('THIS IS YOUR BLOCK ITEMS FOR MORE THAN ONE BLOCK SEARCH RESULT')
+                        // console.log(response.data.items)
                     } else {
                         this.blockInfo = response.data
                         this.searchedMultiple = false
-                        console.log('THIS IS YOUR BLOCKINFO FOR A SINGLE BLOCK SEARCH RESULT')
-                        console.log(response.data)
+                        // console.log('THIS IS YOUR BLOCKINFO FOR A SINGLE BLOCK SEARCH RESULT')
+                        // console.log(response.data)
                     }
                     this.errored = false;
                 })
@@ -281,10 +278,10 @@ export default {
                     this.errored = true;
                 })
                 .finally(() => (this.loading = false));
+                this.userSearched = false
         },
     },
     mounted() {
-        this.userSearched = false;
         axios
             .get(
                 "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10"
@@ -301,11 +298,12 @@ export default {
     },
     methods: {
         renderHome() {
-            this.userSearched = false
-            this.userSearchErrored = false
+            this.loading = true
+            this.searchedMultiple = true
             axios
                 .get(
-                    "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=10"
+                    "https://ethereum-api.rarible.org/v0.1/nft/items/byCollection?collection=0x01234567bac6ff94d7e4f0ee23119cf848f93245&size=" +
+                    this.pageIncrement
                 )
                 .then((response) => {
                     this.blockItems = response.data.items;
